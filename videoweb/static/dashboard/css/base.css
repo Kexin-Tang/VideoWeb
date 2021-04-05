@@ -1,0 +1,77 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.narbar {
+    margin-bottom: 0;
+}
+
+.dropdown-menu {
+    min-width: 5.7rem;
+}
+
+.dropdown-menu[data-bs-popper] {
+    left: -1rem;
+    margin-top: .125rem;
+}
+
+/*
+    base-area
+*/
+#base-area {
+    width: 100%;
+    position: relative;
+    height: 100%;
+}
+
+
+/*
+    sidebar
+*/
+#sidebar {
+    height: 100%;
+    width: 10%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding-top: 1rem;
+    padding-left: 0;
+    list-style: none;
+}
+
+#sidebar > li {
+    line-height: 2rem;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+}
+
+#sidebar > li > a {
+    color: #212529;
+    text-decoration: none;
+}
+
+#sidebar > li > a:visited {
+    color: #212529;
+    text-decoration: none;
+}
+
+#sidebar > li > a:hover {
+    color: #212529;
+    text-decoration: underline;
+}
+
+/*
+    content
+*/
+#content {
+    width: 90%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-left: 1px solid #212529;
+}
