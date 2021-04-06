@@ -1,0 +1,96 @@
+<%inherit file="../base.html"/>
+<%! from django.shortcuts import reverse %>
+<%def name="title()">Admin Manage</%def>
+<%def name="content()">
+    <h1>Admin page</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Status</th>
+                <th>Create Date</th>
+                <th>Operation</th>
+            </tr>
+        </thead>
+        <tbody>
+            % for user in users:
+                <tr>
+                    <td>${user.username}</td>
+                    <td>${user.is_superuser}</td>
+                    <td>${user.date_joined}</td>
+                    % if user.id == request.user.id:
+                    <td></td>
+                    % else:
+                        % if user.is_superuser:
+                        <td><a href="${reverse('admin_update_status')}?status=on">Revocation</a></td>
+                        % else:
+                        <td><a href="${reverse('admin_update_status')}?status=off">Permission</a></td>
+                        % endif
+                    % endif
+                </tr>
+            % endfor
+        </tbody>
+    </table>
+    <div class="paginator">
+        ${paginator(page, total)}
+    </div>
+</%def>
+
+<%def name="paginator(page, total)">
+<nav>
+    <ul class="pagination">
+        % if page>1:
+            <li class="page-item">
+                <a class="page-link" href="${reverse('admin_manage')}?page=1"> << </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="${reverse('admin_manage')}?page=${page-1}"> < </a>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link" style="color: #5a189a;"> ${page} / ${total} </span>
+            </li>
+            % if page>=total:
+                <li class="page-item disabled">
+                    <span class="page-link"> > </span>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link"> >> </span>
+                </li>
+            % else:
+                <li class="page-item">
+                    <a class="page-link" href="${reverse('admin_manage')}?page=${page+1}"> > </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="${reverse('admin_manage')}?page=${total}"> >> </a>
+                </li>
+            % endif
+        % else:
+            <li class="page-item disabled">
+                <span class="page-link"> << </span>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link"> < </span>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link" style="color: #5a189a;"> ${page} / ${total} </span>
+            </li>
+            % if total>page:
+                <li class="page-item">
+                    <a class="page-link" href="${reverse('admin_manage')}?page=${page+1}"> > </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="${reverse('admin_manage')}?page=${total}"> >> </a>
+                </li>
+            % else:
+                <li class="page-item disabled">
+                    <span class="page-link"> > </span>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link"> >> </span>
+                </li>
+            % endif
+        % endif
+    </ul>
+</nav>
+</%def>

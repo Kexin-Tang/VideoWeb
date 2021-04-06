@@ -1,6 +1,7 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<%! from django.shortcuts import reverse %>
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: #5a189a">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">Navbar</a>
+        <a class="navbar-brand" href="${reverse('dashboard_index')}">Dashboard</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -9,13 +10,22 @@
                 <li></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">User</a>
-                     <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#">Logout</a></li>
-                    </ul>
-                </li>
+                ${loginCheck(request.user)}
             </ul>
         </div>
     </div>
 </nav>
+
+<%def name="loginCheck(user)">
+    % if user.is_anonymous:
+        <a class="nav-link" href="${reverse('dashboard_login')}"> Log in </a>
+        <a class="nav-link" href="#"> Sign up </a>
+    % else:
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">${request.user}</a>
+            <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="${reverse('dashboard_logout')}">Logout</a></li>
+            </ul>
+        </li>
+    % endif
+</%def>

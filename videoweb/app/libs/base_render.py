@@ -7,6 +7,7 @@ from django.template import RequestContext
 from django.conf import settings
 from django.template.context import Context
 from django.http import HttpResponse
+from django.middleware.csrf import get_token
 
 def render_to_response(req, template, data=None):
     context_instance = RequestContext(req)
@@ -30,6 +31,12 @@ def render_to_response(req, template, data=None):
     for d in context_instance:
         result.update(d)
 
-    result['csrf_token'] = '<input type="hidden" name="csrfmiddlewaretoken" value={0} />'.format(req.META['CSRF_COOKIE'])
+    result['request'] = req
+    req.META["CSRF_COOKIE"] = get_token(req)
+    result['csrf_token'] = ('<div style="display:none">'
+                            '<input type="hidden" '
+                            'name="csrfmiddlewaretoken" '
+                            'value="{0}"/>'
+                            '</div>'.format(req.META["CSRF_COOKIE"]))
 
     return HttpResponse(mako_template.render(**result))

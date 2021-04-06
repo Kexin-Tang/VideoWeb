@@ -31,36 +31,31 @@ html, body {
 /*
     sidebar
 */
+
 #sidebar {
-    height: 100%;
     width: 10%;
-    position: absolute;
-    left: 0;
-    top: 0;
-    padding-top: 1rem;
-    padding-left: 0;
-    list-style: none;
 }
 
-#sidebar > li {
-    line-height: 2rem;
-    cursor: pointer;
+#sidebar li {
+    background-color: #5a189a;
+    margin: 0.1rem 0.5rem;
     text-align: center;
-    width: 100%;
+    padding: 1px;
+    border-radius: 10px;
 }
 
-#sidebar > li > a {
-    color: #212529;
+#sidebar a {
+    color: #ffffff;
     text-decoration: none;
 }
 
-#sidebar > li > a:visited {
-    color: #212529;
+#sidebar a:visited {
+    color: #ffffff;
     text-decoration: none;
 }
 
-#sidebar > li > a:hover {
-    color: #212529;
+#sidebar a:hover {
+    color: #ffffff;
     text-decoration: underline;
 }
 
@@ -73,5 +68,38 @@ html, body {
     position: absolute;
     top: 0;
     right: 0;
-    border-left: 1px solid #212529;
+    border-left: 1px solid #5a189a;
+}
+
+h1 {
+    margin: 2rem;
+}
+
+.btn {
+    border: 2px solid #5a189a;
+    background-color: #ffffff;
+    color: #5a189a;
+}
+
+.btn:hover {
+    background-color: #5a189a;
+    color: #ffffff;
+}
+
+.paginator {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 0 10px;
+}
+
+
+.page-link {
+    color: #ffffff;
+    background-color: #5a189a;
+}
+
+.page-link:hover {
+    color: #5a189a;
+    background-color: #ffffff;
 }
