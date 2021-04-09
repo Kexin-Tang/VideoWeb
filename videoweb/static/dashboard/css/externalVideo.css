@@ -1,0 +1,29 @@
+#create-form-btn {
+    margin-left: 2rem;
+}
+
+#create-video-form label {
+    color: #6f42c1;
+}
+
+#errorwrapper {
+    position: absolute;
+    bottom: 0.3rem;
+    right: 0.3rem;
+    width: 30vw;
+}
+
+.alert {
+    margin-bottom: 0;
+}
+
+.video-image-display {
+    width: 10vw;
+}
+
+.description {
+    width: 10vw;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

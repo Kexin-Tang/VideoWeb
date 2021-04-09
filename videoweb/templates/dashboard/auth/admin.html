@@ -1,16 +1,16 @@
 <%inherit file="../base.html"/>
 <%! from django.shortcuts import reverse %>
-<%def name="title()">Admin Manage</%def>
+<%def name="title()">管理员界面</%def>
 <%def name="content()">
-    <h1>Admin page</h1>
+    <h1>管理员页面</h1>
 
     <table class="table">
         <thead>
             <tr>
-                <th>Username</th>
-                <th>Status</th>
-                <th>Create Date</th>
-                <th>Operation</th>
+                <th>用户名</th>
+                <th>状态</th>
+                <th>创建日期</th>
+                <th>操作</th>
             </tr>
         </thead>
         <tbody>
@@ -23,9 +23,9 @@
                     <td></td>
                     % else:
                         % if user.is_superuser:
-                        <td><a href="${reverse('admin_update_status')}?status=on">Revocation</a></td>
+                        <td><a href="${reverse('admin_update_status')}?status=on">撤销权限</a></td>
                         % else:
-                        <td><a href="${reverse('admin_update_status')}?status=off">Permission</a></td>
+                        <td><a href="${reverse('admin_update_status')}?status=off">授予权限</a></td>
                         % endif
                     % endif
                 </tr>

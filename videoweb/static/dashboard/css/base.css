@@ -33,42 +33,47 @@ html, body {
 */
 
 #sidebar {
-    width: 10%;
+    width: 15%;
 }
 
 #sidebar li {
-    background-color: #5a189a;
+    background-color: #ffffff;
     margin: 0.1rem 0.5rem;
     text-align: center;
     padding: 1px;
     border-radius: 10px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+#sidebar li:hover{
+    background-color: #6f42c1;
 }
 
 #sidebar a {
-    color: #ffffff;
-    text-decoration: none;
+    color: #6f42c1;
+    text-decoration: underline;
+    transition: color 0.3s ease-in-out;
 }
 
 #sidebar a:visited {
-    color: #ffffff;
-    text-decoration: none;
+    color: #6f42c1;
 }
 
 #sidebar a:hover {
     color: #ffffff;
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 /*
     content
 */
 #content {
-    width: 90%;
+    width: 85%;
     height: 100%;
     position: absolute;
     top: 0;
     right: 0;
-    border-left: 1px solid #5a189a;
+    border-left: 1px solid #6f42c1;
 }
 
 h1 {
@@ -76,13 +81,13 @@ h1 {
 }
 
 .btn {
-    border: 2px solid #5a189a;
+    border: 2px solid #6f42c1;
     background-color: #ffffff;
-    color: #5a189a;
+    color: #6f42c1;
 }
 
 .btn:hover {
-    background-color: #5a189a;
+    background-color: #6f42c1;
     color: #ffffff;
 }
 
@@ -96,10 +101,10 @@ h1 {
 
 .page-link {
     color: #ffffff;
-    background-color: #5a189a;
+    background-color: #6f42c1;
 }
 
 .page-link:hover {
-    color: #5a189a;
+    color: #6f42c1;
     background-color: #ffffff;
 }

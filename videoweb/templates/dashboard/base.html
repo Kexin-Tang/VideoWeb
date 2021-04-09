@@ -14,13 +14,16 @@
 <div id="base-area">
     <ul class="nav flex-column" id="sidebar">
         <li class="nav-item">
-            <a class="nav-link" href="${reverse('admin_manage')}">Admin</a>
+            <a class="nav-link" href="${reverse('admin_manage')}">管理用户</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">User</a>
+            <a class="nav-link" href="#">用户列表</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Video</a>
+            <a class="nav-link" href="${reverse('external_video')}">外部视频</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">自定义视频</a>
         </li>
     </ul>
     <div id="content">

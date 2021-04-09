@@ -5,28 +5,33 @@ from django.shortcuts import render, reverse, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.core.paginator import Paginator
+from app.dashboard.utils.permission import dashboardAuth
 
 class Login(View):
     TEMPLATE = 'dashboard/auth/login.html'
     def get(self, req):
-
         if req.user.is_authenticated:
             return redirect(reverse('dashboard_index'))
 
-        return render_to_response(req, self.TEMPLATE, {'error': ''})
+        to = req.GET.get('to', '')
+        return render_to_response(req, self.TEMPLATE, {'error': '', 'to': to})
 
     def post(self, req):
         username = req.POST.get('username')
         password = req.POST.get('password')
+        to = req.GET.get('to', '')
         exists = User.objects.filter(username=username).exists()
         if not exists:
-            return render_to_response(req, self.TEMPLATE, {'error': "User not found"})
+            return render_to_response(req, self.TEMPLATE, {'error': "未找到该用户"})
 
         user = authenticate(username=username, password=password)
         if not user:
-            return render_to_response(req, self.TEMPLATE, {'error': "Login failed"})
+            return render_to_response(req, self.TEMPLATE, {'error': "登录失败"})
 
         login(req, user)
+
+        if to:
+            return redirect(to)
 
         return redirect(reverse('dashboard_index'))
 
@@ -39,6 +44,7 @@ class Logout(View):
 class AdminManage(View):
     TEMPLATE = 'dashboard/auth/admin.html'
 
+    @dashboardAuth
     def get(self, req):
         users = User.objects.all()
 

@@ -1,3 +1,3 @@
-from django.db import models
+from .dashboardModels.video import Video, VideoStar, VideoDetail
+from .dashboardModels.auth import ClientUser
 
-# Create your models here.

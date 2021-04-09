@@ -1,0 +1,109 @@
+<%inherit file="../base.html"/>
+<%!
+    from django.shortcuts import reverse
+    from app.dashboardModels.video import VideoType, VideoSource, Nation
+%>
+<%def name="title()">详细信息</%def>
+<%def name="css()"><link href="/static/dashboard/css/detailVideo.css" rel="stylesheet"></%def>
+
+<%def name="content()">
+    % if not detail:
+        ${withoutDetail()}
+    % else:
+        ${showDetail()}
+    %endif
+</%def>
+
+<!------------------------------- 显示缩略信息 ----------------------------->
+<%def name="withoutDetail()">
+<div id="first">
+    <span id="title">
+        <span class="badge">${VideoSource[video.source].label}</span>
+        <span class="badge bg-light text-dark">${video.videoName}</span>
+    </span>
+    ${selectNation(video.nation)}
+    <span class="badge bg-secondary">
+        ${VideoType[video.videoType].label}
+    </span>
+</div>
+
+<div id="second">
+    <div id="img-area">
+        <img src="${video.image}">
+    </div>
+
+    <div id="detail-area">
+        <div id="desc-area">
+            <p>${video.desc}</p>
+        </div>
+        <div id="star-area">
+            <p>未定义</p>
+        </div>
+    </div>
+</div>
+
+<div id="third">
+
+</div>
+</%def>
+
+<!------------------------------- 显示详细信息 ----------------------------->
+<%def name="showDetail()">
+<div id="first">
+    <span id="title">
+        <span class="badge">${VideoSource[video.source].label}</span>
+        <span class="badge bg-light text-dark">
+            <a href="${detail.url}">${video.videoName} </a>
+            <span class="badge bg-secondary"> ${detail.number}</span>
+        </span>
+        ${selectNation(video.nation)}
+        <span class="badge bg-secondary">
+            ${VideoType[video.videoType].label}
+        </span>
+    </span>
+</div>
+
+<div id="second">
+    <div id="img-area">
+        <img src="${video.image}">
+    </div>
+
+    <div id="detail-area">
+        <div id="desc-area">
+            <p>${video.desc}</p>
+        </div>
+        <div id="star-area">
+            <p>stars</p>
+        </div>
+    </div>
+</div>
+
+<div id="third">
+
+</div>
+</%def>
+
+
+<%def name="selectNation(nation)">
+    % if nation == 'CHN':
+    <span class="badge bg-danger">
+        中国
+    </span>
+    % elif nation == 'JPN':
+    <span class="badge bg-warning">
+        日本
+    </span>
+    % elif nation == 'UK':
+    <span class="badge bg-primary">
+        英国
+    </span>
+    % elif nation == 'US':
+    <span class="badge bg-info">
+        美国
+    </span>
+    % else:
+    <span class="badge bg-success">
+        其他
+    </span>
+    % endif
+</%def>

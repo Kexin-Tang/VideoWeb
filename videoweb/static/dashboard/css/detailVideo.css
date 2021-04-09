@@ -1,0 +1,93 @@
+/*
+    第一部分
+*/
+#first{
+    width: 100%;
+    height: 15%;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+#title {
+    font-size: 2rem;
+    margin-left: 2rem;
+}
+
+.badge {
+    background-color: #6f42c1;
+}
+
+/*
+    第二部分
+*/
+#second {
+    width: 100%;
+    height: 55%;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+/*
+    左半部分
+*/
+#img-area {
+    height: 100%;
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#img-area img {
+    width: 90%;
+    height: 90%;
+}
+
+/*
+    右半部分
+*/
+#detail-area{
+    width:50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/*
+    右半部分的上侧
+*/
+#desc-area {
+    width:95%;
+    height: 70%;
+    padding: 1rem;
+    background-color: #6f42c1;
+    color: #ffffff;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+/*
+    右半部分的下侧
+*/
+#star-area {
+    width: 95%;
+    height: 30%;
+    padding: 1rem;
+}
+
+#third {
+    width:100%;
+    height: 30%;
+    position: relative;
+}
+
+a {
+    color: #6f42c1;
+}
+
+a:hover {
+    text-decoration: none;
+}
