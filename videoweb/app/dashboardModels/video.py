@@ -31,6 +31,17 @@ class Nation(Enum):
     america = "US"
     other = "other"
 
+
+class IdentityType(Enum):
+    mainstar = 'mainstar'
+    costar = 'costar'
+    director = 'director'
+
+IdentityType.mainstar.label = '主演'
+IdentityType.costar.label = '配角'
+IdentityType.director.label = '导演'
+
+
 class Video(models.Model):
     videoName = models.CharField(max_length=100, null=False)
     image = models.CharField(max_length=500, default='')
@@ -46,7 +57,7 @@ class Video(models.Model):
         unique_together = ('videoName', 'videoType', 'source', 'nation')
 
     def __str__(self):
-        return self.name
+        return self.videoName
 
 class VideoStar(models.Model):
     video = models.ForeignKey(Video, related_name='videoStar', on_delete=models.CASCADE)

@@ -69,11 +69,11 @@ html, body {
 */
 #content {
     width: 85%;
-    height: 100%;
     position: absolute;
     top: 0;
     right: 0;
     border-left: 1px solid #6f42c1;
+    padding-bottom: 2rem;
 }
 
 h1 {

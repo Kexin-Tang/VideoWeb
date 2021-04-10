@@ -8,77 +8,76 @@
 <%def name="content()">
     <h1>编辑信息</h1>
     ${createForm()}
+    ${showError(error)}
 </%def>
 
 
 <!---------------------------- 主要是表单内容 --------------------------------->
 <%def name="createForm()">
-<form method="POST" action="#" id="create-video-form">
+<form method="POST" action="${reverse('external_video_edit', kwargs={'id': video.id})}" id="create-video-form" class="col-4 offset-4">
     ${csrf_token}
-    <div id="form-content">
-        <div id="form-left">
-            <div class="form-floating mb-1">
-                <input type="text" class="form-control" id="videoName" name="videoName" placeholder="videoName" value="${video.videoName}">
-                <label for="videoName">标题</label>
-            </div>
-            <div class="form-floating mb-1">
-                <input type="text" class="form-control" id="image" name="image" placeholder="image" value="${video.image}">
-                <label for="image">图片</label>
-            </div>
-            <div class="form-floating mb-1">
-                <select class="form-select" id="videotype" name="videoType">
-                    % for videotype in VideoType:
-                        % if videotype.value == video.videoType:
-                        <option value="${videotype.value}" selected>${videotype.label}</option>
-                        % else:
-                        <option value="${videotype.value}">${videotype.label}</option>
-                        % endif
-                    % endfor
-                </select>
-                <label for="videotype">视频种类</label>
-            </div>
-            <div class="form-floating mb-1">
-                <select class="form-select" id="videosource" name="videoSource">
-                    % for videosrc in VideoSource:
-                        % if videosrc != VideoSource('custom'):
-                            % if videosrc.value == video.source:
-                            <option value="${videosrc.value}" selected>${videosrc.label}</option>
-                            % else:
-                            <option value="${videosrc.value}">${videosrc.label}</option>
-                            % endif
-                        % endif
-                    % endfor
-                </select>
-                <label for="videosource">视频源</label>
-            </div>
-            <div class="form-floating mb-1">
-                <select class="form-select" id="nation" name="nation">
-                    % for nation in Nation:
-                        % if nation.value == video.nation:
-                        <option value="${nation.value}" selected>${nation.value}</option>
-                        % else:
-                        <option value="${nation.value}">${nation.value}</option>
-                        % endif
-                    % endfor
-                </select>
-                <label for="nation">国家</label>
-            </div>
-            <div class="form-floating mb-1">
-                <textarea class="form-control" id="desc" style="height: 100px" name="desc">${video.desc}</textarea>
-                <label for="desc">简介</label>
-            </div>
-        </div>
-
-        <div id="form-right">
-            <div class="form-floating mb-1">
-                <input type="text" class="form-control" id="videoName" name="videoName" placeholder="videoName" value="${video.videoName}">
-                <label for="videoName">标题</label>
-            </div>
-        </div>
+    <div class="form-floating mb-1">
+        <input type="text" class="form-control" id="videoName" name="videoName" placeholder="videoName" value="${video.videoName}" disabled>
+        <label for="videoName">标题</label>
     </div>
-
-    <div id="form-btn">
-        <button class="btn mb-1">提交修改</button>
+    <div class="form-floating mb-1">
+        <input type="text" class="form-control" id="image" name="image" placeholder="image" value="${video.image}">
+        <label for="image">图片</label>
     </div>
+    <div class="form-floating mb-1">
+        <select class="form-select" id="videotype" name="videoType">
+            % for videotype in VideoType:
+                % if videotype.value == video.videoType:
+                <option value="${videotype.value}" selected>${videotype.label}</option>
+                % else:
+                <option value="${videotype.value}">${videotype.label}</option>
+                % endif
+            % endfor
+        </select>
+        <label for="videotype">视频种类</label>
+    </div>
+    <div class="form-floating mb-1">
+        <select class="form-select" id="videosource" name="videoSource">
+            % for videosrc in VideoSource:
+                % if videosrc != VideoSource('custom'):
+                    % if videosrc.value == video.source:
+                    <option value="${videosrc.value}" selected>${videosrc.label}</option>
+                    % else:
+                    <option value="${videosrc.value}">${videosrc.label}</option>
+                    % endif
+                % endif
+            % endfor
+        </select>
+        <label for="videosource">视频源</label>
+    </div>
+    <div class="form-floating mb-1">
+        <select class="form-select" id="nation" name="nation">
+            % for nation in Nation:
+                % if nation.value == video.nation:
+                <option value="${nation.value}" selected>${nation.value}</option>
+                % else:
+                <option value="${nation.value}">${nation.value}</option>
+                % endif
+            % endfor
+        </select>
+        <label for="nation">国家</label>
+    </div>
+    <div class="form-floating mb-1">
+        <textarea class="form-control" id="desc" style="height: 100px" name="desc">${video.desc}</textarea>
+        <label for="desc">简介</label>
+    </div>
+    <button class="btn mb-1">提交修改</button>
 </form>
+</%def>
+
+
+<%def name="showError(err)">
+    % if err:
+    <div id="errorwrapper">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>更新失败: </strong> ${err}. 请重新尝试.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+    % endif
 </%def>

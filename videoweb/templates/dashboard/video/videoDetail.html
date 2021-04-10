@@ -7,15 +7,6 @@
 <%def name="css()"><link href="/static/dashboard/css/detailVideo.css" rel="stylesheet"></%def>
 
 <%def name="content()">
-    % if not detail:
-        ${withoutDetail()}
-    % else:
-        ${showDetail()}
-    %endif
-</%def>
-
-<!------------------------------- 显示缩略信息 ----------------------------->
-<%def name="withoutDetail()">
 <div id="first">
     <span id="title">
         <span class="badge">${VideoSource[video.source].label}</span>
@@ -26,7 +17,6 @@
         ${VideoType[video.videoType].label}
     </span>
 </div>
-
 <div id="second">
     <div id="img-area">
         <img src="${video.image}">
@@ -37,53 +27,36 @@
             <p>${video.desc}</p>
         </div>
         <div id="star-area">
+            % if not detail:
             <p>未定义</p>
-        </div>
-    </div>
-</div>
-
-<div id="third">
-
-</div>
-</%def>
-
-<!------------------------------- 显示详细信息 ----------------------------->
-<%def name="showDetail()">
-<div id="first">
-    <span id="title">
-        <span class="badge">${VideoSource[video.source].label}</span>
-        <span class="badge bg-light text-dark">
-            <a href="${detail.url}">${video.videoName} </a>
-            <span class="badge bg-secondary"> ${detail.number}</span>
-        </span>
-        ${selectNation(video.nation)}
-        <span class="badge bg-secondary">
-            ${VideoType[video.videoType].label}
-        </span>
-    </span>
-</div>
-
-<div id="second">
-    <div id="img-area">
-        <img src="${video.image}">
-    </div>
-
-    <div id="detail-area">
-        <div id="desc-area">
-            <p>${video.desc}</p>
-        </div>
-        <div id="star-area">
+            % else:
             <p>stars</p>
+            % endif
         </div>
     </div>
 </div>
-
 <div id="third">
-
+    <div style="margin-left: 2rem; margin-right: 2rem;">
+    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="me-2" role="group">
+            % if detail:
+                % for single in detail:
+                <a href="${single.url}"><button type="button" class="btn">${single.number}</button></a>
+                % endfor
+            % endif
+        </div>
+    </div>
+    </div>
 </div>
+
+<div id="forth">
+    <a href="${reverse('video_sub_star_view', kwargs={'id': video.id})}"><button type="button" class="btn">编辑演员和剧集</button></a>
+</div>
+
 </%def>
 
 
+<!---------------------------------------- 根据国家选择配色 ---------------------------------------->
 <%def name="selectNation(nation)">
     % if nation == 'CHN':
     <span class="badge bg-danger">
@@ -107,3 +80,4 @@
     </span>
     % endif
 </%def>
+

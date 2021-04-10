@@ -1,0 +1,133 @@
+<%inherit file="../base.html"/>
+<%!
+    from django.shortcuts import reverse
+    from app.dashboardModels.video import IdentityType
+%>
+<%def name="title()">编辑演员和剧集</%def>
+<%def name="css()"><link href="/static/dashboard/css/videoSubStarView.css" rel="stylesheet"></%def>
+
+<%def name="content()">
+    <h1>编辑演员和剧集</h1>
+    <div class="col-6" style="margin-left: 2rem">
+        ${tableVideosub()}
+        ${tableStar()}
+    </div>
+    <div id="form-area" class="col-4">
+        ${videosubForm()}
+        ${videostarForm()}
+    </div>
+    <div id="error-area" class="col-4">
+        ${showError(error)}
+    </div>
+</%def>
+
+
+<!---------------------------- 主要是数据库信息的呈现 --------------------------------->
+<%def name="tableVideosub()">
+<h2>剧集信息</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>集数</th>
+            <th>链接</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+    % if details:
+        % for detail in details:
+        <tr>
+            <td>第 ${detail.number} 集</td>
+            <td>
+                <a href="${detail.url}">
+                    <p style="width:30vw; overflow: hidden; white-space: nowrap; text-overflow: ellipsis">
+                        ${detail.url}
+                    </p>
+                </a>
+            </td>
+            <td>
+                <a href="${reverse('delete_sub', kwargs={'videoID': video.id, 'subID': detail.id})}">删除</a>
+            </td>
+        </tr>
+        % endfor
+    % endif
+    </tbody>
+</table>
+</%def>
+
+
+
+<!---------------------------- 主要是数据库信息的呈现 --------------------------------->
+<%def name="tableStar()">
+<h2>演员信息</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>演员名称</th>
+            <th>演员类型</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+    % if stars:
+        % for star in stars:
+        <tr>
+            <td>${star.name}</td>
+            <td>${IdentityType(star.identity).label}</td>
+            <td>
+                <a href="${reverse('delete_star', kwargs={'videoID': video.id, 'starID': star.id})}">删除</a>
+            </td>
+        </tr>
+        % endfor
+    % endif
+    </tbody>
+</table>
+</%def>
+
+<!---------------------------- 修改剧集表单 --------------------------------->
+<%def name="videosubForm()">
+<form method="POST" action="${reverse('add_sub', kwargs={'id': video.id})}">
+    ${csrf_token}
+    <div class="form-floating mb-1">
+        <input type="number" class="form-control" id="videoNumber" name="number" min="1">
+        <label for="videoNumber">剧集</label>
+    </div>
+    <div class="form-floating mb-1">
+        <input type="text" class="form-control" id="url" name="url" placeholder="url">
+        <label for="url">URL</label>
+    </div>
+    <button class="btn mb-1">添加新剧集</button>
+</form>
+</%def>
+
+<!---------------------------- 修改演员表单 --------------------------------->
+<%def name="videostarForm()">
+<form method="POST" action="${reverse('add_star', kwargs={'id': video.id})}">
+    ${csrf_token}
+    <div class="form-floating mb-1">
+        <input type="text" class="form-control" id="name" name="name" placeholder="name">
+        <label for="name">名字</label>
+    </div>
+    <div class="form-floating mb-1">
+        <select class="form-select" id="identity" name="identity">
+            % for identitytype in IdentityType:
+                <option value="${identitytype.value}">${identitytype.label}</option>
+            % endfor
+        </select>
+        <label for="identity">人员类型</label>
+    </div>
+    <button class="btn mb-1">添加新成员</button>
+</form>
+</%def>
+
+
+
+<!---------------------------- 主要是错误内容显示 --------------------------------->
+<%def name="showError(err)">
+    % if err:
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>失败: </strong> ${err}. 请重新尝试.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    % endif
+</%def>

@@ -122,7 +122,11 @@
             <td>${video.createTime}</td>
             <td>${video.updateTime}</td>
             <td>${video.status}</td>
-            <td><a href="${reverse('external_video_edit', kwargs={'id': video.id})}">编辑</a> | <a href="${reverse('external_video_detail', kwargs={'id': video.id})}">查看</a></td>
+            <td>
+                <a href="${reverse('external_video_edit', kwargs={'id': video.id})}">编辑</a>
+                |
+                <a href="${reverse('external_video_detail', kwargs={'id': video.id})}">查看</a>
+            </td>
         </tr>
         % endfor
     </tbody>

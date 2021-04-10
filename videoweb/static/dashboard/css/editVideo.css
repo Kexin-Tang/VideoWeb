@@ -1,32 +1,6 @@
-#create-video-form {
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-}
-
-#form-content {
-    height: 90%;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-}
-
-#form-left {
-    width: 30%;
-    margin-right: 1rem;
-}
-
-#form-right {
-    width: 30%;
-    margin-right: 1rem;
-}
-
-#form-btn {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    margin-top: 1rem;
+#errorwrapper {
+    position: absolute;
+    bottom: 0.3rem;
+    right: 0.3rem;
+    width: 30vw;
 }

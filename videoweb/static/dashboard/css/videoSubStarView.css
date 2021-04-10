@@ -1,0 +1,11 @@
+#form-area {
+    position: fixed;
+    right: 2rem;
+    top: 25%;
+}
+
+#error-area {
+    position: fixed;
+    right: 2rem;
+    bottom: 3rem;
+}
