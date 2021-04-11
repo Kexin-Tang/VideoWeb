@@ -104,8 +104,6 @@
             <th>来源</th>
             <th>国家</th>
             <th>简介</th>
-            <th>创建日期</th>
-            <th>修改日期</th>
             <th>状态</th>
             <th>操作</th>
         </tr>
@@ -119,13 +117,11 @@
             <td>${VideoSource(video.source).label}</td>
             <td>${Nation(video.nation).value}</td>
             <td><p class="description">${video.desc}</p></td>
-            <td>${video.createTime}</td>
-            <td>${video.updateTime}</td>
             <td>${video.status}</td>
             <td>
-                <a href="${reverse('external_video_edit', kwargs={'id': video.id})}">编辑</a>
-                |
-                <a href="${reverse('external_video_detail', kwargs={'id': video.id})}">查看</a>
+                <a href="${reverse('external_video_edit', kwargs={'id': video.id})}"><button class="btn">编辑</button></a>
+                <a href="${reverse('external_video_detail', kwargs={'id': video.id})}"><button class="btn">查看</button></a>
+                <a href="${reverse('external_video_status', kwargs={'id': video.id})}"><button class="btn">修改状态</button></a>
             </td>
         </tr>
         % endfor

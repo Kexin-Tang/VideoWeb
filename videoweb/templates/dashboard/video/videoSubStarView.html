@@ -8,17 +8,31 @@
 
 <%def name="content()">
     <h1>编辑演员和剧集</h1>
-    <div class="col-6" style="margin-left: 2rem">
+    ${updateSub()}
+    <div class="col-8" style="margin-left: 2rem">
         ${tableVideosub()}
+        <div>
+            <button id="offcanvas-add" class="btn mb-2" data-bs-toggle="offcanvas" data-bs-target="#videosub"> 添加 </button>
+        </div>
+        ${offcanvas_sub()}
+
         ${tableStar()}
-    </div>
-    <div id="form-area" class="col-4">
-        ${videosubForm()}
-        ${videostarForm()}
+        <div>
+            <button id="offcanvas-add" class="btn mb-2" data-bs-toggle="offcanvas" data-bs-target="#videostar"> 添加 </button>
+        </div>
+        ${offcanvas_star()}
     </div>
     <div id="error-area" class="col-4">
         ${showError(error)}
     </div>
+    <div id="edit-filed" class="col-3">
+
+    </div>
+
+</%def>
+
+<%def name="js()">
+    <script src="/static/dashboard/js/updateSub.js"></script>
 </%def>
 
 
@@ -46,7 +60,10 @@
                 </a>
             </td>
             <td>
-                <a href="${reverse('delete_sub', kwargs={'videoID': video.id, 'subID': detail.id})}">删除</a>
+                <button class="btn updatesub-btn" data-id="${detail.id}" data-url="${detail.url}" data-number="${detail.number}">编辑</button>
+                <a href="${reverse('delete_sub', kwargs={'videoID': video.id, 'subID': detail.id})}">
+                    <button class="btn">删除</button>
+                </a>
             </td>
         </tr>
         % endfor
@@ -75,7 +92,9 @@
             <td>${star.name}</td>
             <td>${IdentityType(star.identity).label}</td>
             <td>
-                <a href="${reverse('delete_star', kwargs={'videoID': video.id, 'starID': star.id})}">删除</a>
+                <a href="${reverse('delete_star', kwargs={'videoID': video.id, 'starID': star.id})}">
+                    <button class="btn">删除</button>
+                </a>
             </td>
         </tr>
         % endfor
@@ -130,4 +149,49 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     % endif
+</%def>
+
+
+<!---------------------------- 剧集侧边弹出栏 -------------------------------->
+<%def name="offcanvas_sub()">
+<div class="offcanvas offcanvas-end" id="videosub" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas-header">
+            <h5 id="offcanvasRightLabel">新增剧集信息</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            ${videosubForm()}
+        </div>
+    </div>
+</%def>
+
+<!---------------------------- 演员侧边弹出栏 -------------------------------->
+<%def name="offcanvas_star()">
+<div class="offcanvas offcanvas-end" id="videostar" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas-header">
+            <h5 id="offcanvasRightLabel">新增人员信息</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            ${videostarForm()}
+        </div>
+    </div>
+</%def>
+
+
+<!--------------------------- 剧集的编辑表单 ----------------------------------->
+<%def name="updateSub()">
+<form method="POST" action="${reverse('add_sub', kwargs={'id': video.id})}">
+    ${csrf_token}
+    <div class="form-floating mb-1">
+        <input type="number" class="form-control" id="updateSub-number" name="number" min="1">
+        <label for="updateSub-number">剧集</label>
+    </div>
+    <div class="form-floating mb-1">
+        <input type="text" class="form-control" id="updateSub-url" name="url" placeholder="url">
+        <label for="updateSub-url">URL</label>
+    </div>
+    <input type="hidden" id="updateSub-id" name="id" value="">
+    <button class="btn mb-1">修改</button>
+</form>
 </%def>

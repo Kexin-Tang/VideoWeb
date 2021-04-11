@@ -1,4 +1,4 @@
-#form-area {
+#edit-filed {
     position: fixed;
     right: 2rem;
     top: 25%;
@@ -8,4 +8,15 @@
     position: fixed;
     right: 2rem;
     bottom: 3rem;
+}
+
+#offcanvas-add {
+    background-color: #6f42c1;
+    color: #ffffff;
+    width: 100%;
+}
+
+#offcanvas-add:hover {
+    background-color: #ffffff;
+    color: #6f42c1;
 }

@@ -215,3 +215,20 @@ class DeleteVideoStar(View):
 
         VideoStar.objects.filter(pk=starID).delete()
         return redirect(reverse('video_sub_star_view', kwargs={'id': videoID}))
+
+
+'''
+    改变视频状态
+'''
+class ChangeStatus(View):
+    def get(self, req, id):
+        exists = Video.objects.filter(pk=id).exists()
+        if not exists:
+            return redirect('{}?error={}'.format(reverse('external_video'), '未找到对应的视频'))
+
+        video = Video.objects.get(pk=id)
+        status = video.status
+        status = False if status is True else True
+        Video.objects.filter(pk=id).update(status=status)
+
+        return redirect(reverse('external_video'))
