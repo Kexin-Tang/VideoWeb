@@ -4,17 +4,43 @@
     from app.dashboardModels.video import VideoType, VideoSource, Nation
 %>
 <%def name="title()">外部视频</%def>
+
+
+
+
+
 <%def name="content()">
-    <h1>外部视频</h1>
+    <h1>
+        <span>
+            <a href="${reverse('dashboard_index')}"><button class="btn" id="back-button"><</button></a>
+        </span>
+        外部视频
+    </h1>
+
+    % if user:
     <button class="btn mb-1" id="create-form-btn" data-bs-toggle="modal" data-bs-target="#createForm">创建</button>
     ${modal()}
+    % endif
+
     ${table()}
+
     ${showError(error)}
+
 </%def>
+
+
+
 
 <%def name="css()">
 <link href="/static/dashboard/css/externalVideo.css" rel="stylesheet">
 </%def>
+
+
+
+
+
+
+
 
 <!---------------------------- 主要是表单内容 --------------------------------->
 <%def name="createForm()">
@@ -68,7 +94,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: #6f42c1;">
-                    <h5 class="modal-title" style="color: #ffffff;">Create a new video</h5>
+                    <h5 class="modal-title" style="color: #ffffff;">创建新视频</h5>
                     <button style="background-color: #ffffff;" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -80,12 +106,13 @@
 </%def>
 
 
+
 <!---------------------------- 主要是错误内容显示 --------------------------------->
 <%def name="showError(err)">
     % if err:
         <div id="errorwrapper">
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong>失败: </strong> ${err}. 请重新尝试.
+            <strong>失败: </strong> ${err}.
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         </div>
@@ -119,9 +146,15 @@
             <td><p class="description">${video.desc}</p></td>
             <td>${video.status}</td>
             <td>
+                % if user:
                 <a href="${reverse('external_video_edit', kwargs={'id': video.id})}"><button class="btn">编辑</button></a>
+                % endif
+
                 <a href="${reverse('external_video_detail', kwargs={'id': video.id})}"><button class="btn">查看</button></a>
+
+                % if user:
                 <a href="${reverse('external_video_status', kwargs={'id': video.id})}"><button class="btn">修改状态</button></a>
+                % endif
             </td>
         </tr>
         % endfor

@@ -1,6 +1,7 @@
 # coding:utf-8
 from django.db import models
 import hashlib
+import time
 
 def hashPwd(password):
     if isinstance(password, str):

@@ -33,9 +33,10 @@ class Nation(Enum):
 
 
 class IdentityType(Enum):
+    director = 'director'
     mainstar = 'mainstar'
     costar = 'costar'
-    director = 'director'
+
 
 IdentityType.mainstar.label = '主演'
 IdentityType.costar.label = '配角'

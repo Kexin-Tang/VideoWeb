@@ -6,7 +6,12 @@
 <%def name="title()">编辑信息</%def>
 <%def name="css()"><link rel="stylesheet" href="/static/dashboard/css/editVideo.css"></%def>
 <%def name="content()">
-    <h1>编辑信息</h1>
+    <h1>
+        <span>
+            <a href="${reverse('external_video')}"><button class="btn" id="back-button"><</button></a>
+        </span>
+        编辑信息
+    </h1>
     ${createForm()}
     ${showError(error)}
 </%def>

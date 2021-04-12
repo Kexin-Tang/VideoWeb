@@ -2,13 +2,17 @@
 <%! from django.shortcuts import reverse %>
 <%def name="title()">管理员界面</%def>
 <%def name="content()">
-    <h1>管理员页面</h1>
-
+    <h1>
+        <span>
+            <a href="${reverse('dashboard_index')}"><button class="btn" id="back-button"><</button></a>
+        </span>
+        管理员页面
+    </h1>
     <table class="table">
         <thead>
             <tr>
                 <th>用户名</th>
-                <th>状态</th>
+                <th>是否拥有权限</th>
                 <th>创建日期</th>
                 <th>操作</th>
             </tr>
@@ -17,17 +21,23 @@
             % for user in users:
                 <tr>
                     <td>${user.username}</td>
-                    <td>${user.is_superuser}</td>
-                    <td>${user.date_joined}</td>
-                    % if user.id == request.user.id:
-                    <td></td>
-                    % else:
-                        % if user.is_superuser:
-                        <td><a href="${reverse('admin_update_status')}?status=on">撤销权限</a></td>
+                    <td>
+                        % if user.is_staff:
+                            有
                         % else:
-                        <td><a href="${reverse('admin_update_status')}?status=off">授予权限</a></td>
+                            无
+                        % endif
+                    </td>
+                    <td>${user.date_joined}</td>
+                    <td>
+                    % if not user.is_superuser:
+                        % if user.is_staff:
+                        <a href="${reverse('admin_update_status')}?status=on&id=${user.id}"><button class="btn">取消权限</button></a>
+                        % else:
+                        <a href="${reverse('admin_update_status')}?status=off&id=${user.id}"><button class="btn">授予权限</button></a>
                         % endif
                     % endif
+                    </td>
                 </tr>
             % endfor
         </tbody>

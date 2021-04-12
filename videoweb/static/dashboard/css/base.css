@@ -72,7 +72,6 @@ html, body {
     position: absolute;
     top: 0;
     right: 0;
-    border-left: 1px solid #6f42c1;
     padding-bottom: 5rem;
 }
 
@@ -107,4 +106,16 @@ h1 {
 .page-link:hover {
     color: #6f42c1;
     background-color: #ffffff;
+}
+
+
+#back-button {
+    border-radius: 50%;
+    background-color: #6f42c1;
+    color: #ffffff;
+}
+
+#back-button:hover {
+    background-color: #ffffff;
+    color: #6f42c1;
 }

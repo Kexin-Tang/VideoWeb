@@ -4,3 +4,14 @@
     right: 0.3rem;
     width: 30vw;
 }
+
+#back-button {
+    border-radius: 50%;
+    background-color: #6f42c1;
+    color: #ffffff;
+}
+
+#back-button:hover {
+    background-color: #ffffff;
+    color: #6f42c1;
+}

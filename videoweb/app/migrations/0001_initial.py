@@ -49,10 +49,10 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('url', models.CharField(max_length=500)),
                 ('number', models.IntegerField(default=1)),
-                ('video', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='videoSub', to='app.video')),
+                ('externalVideo', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='videoSub', to='app.externalVideo')),
             ],
             options={
-                'unique_together': {('video', 'number')},
+                'unique_together': {('externalVideo', 'number')},
             },
         ),
         migrations.CreateModel(
@@ -61,10 +61,10 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=50)),
                 ('identity', models.CharField(default='', max_length=50)),
-                ('video', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='videoStar', to='app.video')),
+                ('externalVideo', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='videoStar', to='app.externalVideo')),
             ],
             options={
-                'unique_together': {('video', 'name', 'identity')},
+                'unique_together': {('externalVideo', 'name', 'identity')},
             },
         ),
     ]

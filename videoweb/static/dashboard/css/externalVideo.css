@@ -27,3 +27,14 @@
     white-space: nowrap;
     text-overflow: ellipsis;
 }
+
+#back-button {
+    border-radius: 50%;
+    background-color: #6f42c1;
+    color: #ffffff;
+}
+
+#back-button:hover {
+    background-color: #ffffff;
+    color: #6f42c1;
+}

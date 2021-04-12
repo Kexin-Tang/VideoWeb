@@ -7,8 +7,17 @@
 <%def name="css()"><link href="/static/dashboard/css/videoSubStarView.css" rel="stylesheet"></%def>
 
 <%def name="content()">
-    <h1>编辑演员和剧集</h1>
-    ${updateSub()}
+    <h1>
+        <span>
+            <a href="${reverse('external_video_detail', kwargs={'id': video.id})}"><button class="btn" id="back-button"><</button></a>
+        </span>
+        编辑演员和剧集
+    </h1>
+
+    <div id="update-form-area">
+        ${updateSub()}
+    </div>
+
     <div class="col-8" style="margin-left: 2rem">
         ${tableVideosub()}
         <div>
@@ -181,7 +190,7 @@
 
 <!--------------------------- 剧集的编辑表单 ----------------------------------->
 <%def name="updateSub()">
-<form method="POST" action="${reverse('add_sub', kwargs={'id': video.id})}">
+<form method="POST" action="${reverse('update_sub', kwargs={'id': video.id})}" id="update-form">
     ${csrf_token}
     <div class="form-floating mb-1">
         <input type="number" class="form-control" id="updateSub-number" name="number" min="1">

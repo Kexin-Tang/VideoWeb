@@ -1,13 +1,19 @@
 <%inherit file="../base.html"/>
 <%!
     from django.shortcuts import reverse
-    from app.dashboardModels.video import VideoType, VideoSource, Nation
+    from app.dashboardModels.video import VideoType, VideoSource, Nation, IdentityType
 %>
 <%def name="title()">详细信息</%def>
 <%def name="css()"><link href="/static/dashboard/css/detailVideo.css" rel="stylesheet"></%def>
 
+
+
 <%def name="content()">
+<!--------------------------------- 显示标题，国别，类型等内容 ------------------------------->
 <div id="first">
+    <span>
+        <a href="${reverse('external_video')}"><button class="btn" id="back-button"><</button></a>
+    </span>
     <span id="title">
         <span class="badge">${VideoSource[video.source].label}</span>
         <span class="badge bg-light text-dark">${video.videoName}</span>
@@ -17,6 +23,8 @@
         ${VideoType[video.videoType].label}
     </span>
 </div>
+
+<!--------------------------------- 显示图片和详细介绍等 ------------------------------->
 <div id="second">
     <div id="img-area">
         <img src="${video.image}">
@@ -27,14 +35,20 @@
             <p>${video.desc}</p>
         </div>
         <div id="star-area">
-            % if not detail:
-            <p>未定义</p>
-            % else:
-            <p>stars</p>
+            % if stars:
+            <ul>
+                % for star in stars:
+                <li style="display: inline-block;">${star.name}(${IdentityType(star.identity).label})  </li>
+                % endfor
+            </ul>
             % endif
         </div>
     </div>
 </div>
+
+
+
+<!--------------------------------- 显示选集 ------------------------------->
 <div id="third">
     <div style="margin-left: 2rem; margin-right: 2rem;">
     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
@@ -49,11 +63,20 @@
     </div>
 </div>
 
+
+
+<!--------------------------------- 显示按钮去更细致的更改内容 ------------------------------->
 <div id="forth">
+    % if user:
     <a href="${reverse('video_sub_star_view', kwargs={'id': video.id})}"><button type="button" class="btn">编辑演员和剧集</button></a>
+    % endif
 </div>
 
+
 </%def>
+
+
+
 
 
 <!---------------------------------------- 根据国家选择配色 ---------------------------------------->

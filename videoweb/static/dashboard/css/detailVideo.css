@@ -3,10 +3,11 @@
 */
 #first{
     width: 100%;
-    height: 15%;
+    height: 5rem;
     position: relative;
     display: flex;
     align-items: center;
+    margin-bottom: 1rem;
 }
 
 #title {
@@ -23,11 +24,12 @@
 */
 #second {
     width: 100%;
-    height: 55%;
+    height: 22rem;
     position: relative;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    margin-bottom: 1rem;
 }
 /*
     左半部分
@@ -35,14 +37,21 @@
 #img-area {
     height: 100%;
     width: 50%;
+    overflow: hidden;
+    position: relative;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    border: 2px dashed #6f42c1;
+    border-radius: 1rem;
+    margin: 0 2rem;
 }
 
 #img-area img {
-    width: 90%;
-    height: 90%;
+    width: 100%;
+    height: 100%;
+    object-fit:none;
+    object-position: center;
 }
 
 /*
@@ -80,13 +89,13 @@
 
 #third {
     width:100%;
-    height: 20%;
     position: relative;
     display: flex;
     justify-content: start;
     align-items: start;
     align-content: start;
     flex-wrap: wrap;
+    margin-bottom: 1rem;
 }
 
 #forth {
@@ -104,4 +113,16 @@ a {
 
 a:hover {
     text-decoration: none;
+}
+
+
+#back-button {
+    border-radius: 50%;
+    background-color: #6f42c1;
+    color: #ffffff;
+}
+
+#back-button:hover {
+    background-color: #ffffff;
+    color: #6f42c1;
 }
