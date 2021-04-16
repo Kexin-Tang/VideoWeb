@@ -60,6 +60,8 @@ class AdminManage(View):
     def get(self, req):
         users = User.objects.all()
 
+        isAdmin = req.user.is_superuser # 当前登录的用户是管理员吗
+
         page = req.GET.get('page', 1)   # 获取当前的页
         p = Paginator(users, 5)         # 定义num个数据/页
         total_pages = p.num_pages       # 获取总的页数
@@ -71,7 +73,7 @@ class AdminManage(View):
             page = total_pages
 
         current_users = p.get_page(int(page)).object_list   # 获取当前页的内容
-        data = {'users': current_users, 'total': int(total_pages), 'page': int(page)}
+        data = {'users': current_users, 'total': int(total_pages), 'page': int(page), 'isAdmin': isAdmin}
 
         return render_to_response(req, self.TEMPLATE, data=data)
 

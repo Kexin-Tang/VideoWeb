@@ -30,11 +30,13 @@
                     </td>
                     <td>${user.date_joined}</td>
                     <td>
-                    % if not user.is_superuser:
-                        % if user.is_staff:
-                        <a href="${reverse('admin_update_status')}?status=on&id=${user.id}"><button class="btn">取消权限</button></a>
-                        % else:
-                        <a href="${reverse('admin_update_status')}?status=off&id=${user.id}"><button class="btn">授予权限</button></a>
+                    % if isAdmin:
+                        % if not user.is_superuser:
+                            % if user.is_staff:
+                            <a href="${reverse('admin_update_status')}?status=on&id=${user.id}"><button class="btn">取消权限</button></a>
+                            % else:
+                            <a href="${reverse('admin_update_status')}?status=off&id=${user.id}"><button class="btn">授予权限</button></a>
+                            % endif
                         % endif
                     % endif
                     </td>
