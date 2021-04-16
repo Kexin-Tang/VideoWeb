@@ -17,12 +17,12 @@
         外部视频
     </h1>
 
+    ${table()}
+
     % if user:
     <button class="btn mb-1" id="create-form-btn" data-bs-toggle="modal" data-bs-target="#createForm">创建</button>
     ${modal()}
     % endif
-
-    ${table()}
 
     ${showError(error)}
 
@@ -144,16 +144,35 @@
             <td>${VideoSource(video.source).label}</td>
             <td>${Nation(video.nation).value}</td>
             <td><p class="description">${video.desc}</p></td>
-            <td>${video.status}</td>
+            <td>
+                % if video.status is True:
+                    正在热映
+                % else:
+                    暂时不可用
+                % endif
+            </td>
             <td>
                 % if user:
+                    % if video.status is True:
+                        <button class="btn" disabled>编辑</button>
+                    % else:
                 <a href="${reverse('external_video_edit', kwargs={'id': video.id})}"><button class="btn">编辑</button></a>
+                    % endif
+                </a>
                 % endif
 
                 <a href="${reverse('external_video_detail', kwargs={'id': video.id})}"><button class="btn">查看</button></a>
 
                 % if user:
-                <a href="${reverse('external_video_status', kwargs={'id': video.id})}"><button class="btn">修改状态</button></a>
+                <a href="${reverse('external_video_status', kwargs={'id': video.id})}">
+                    <button class="btn">
+                        % if video.status is True:
+                            下线
+                        % else:
+                            上线
+                        % endif
+                    </button>
+                </a>
                 % endif
             </td>
         </tr>
