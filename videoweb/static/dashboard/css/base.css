@@ -25,53 +25,6 @@ html, body {
     width: 100%;
     position: relative;
     height: 100%;
-}
-
-
-/*
-    sidebar
-*/
-
-#sidebar {
-    width: 15%;
-}
-
-#sidebar li {
-    background-color: #ffffff;
-    margin: 0.1rem 0.5rem;
-    text-align: center;
-    padding: 1px;
-    border-radius: 10px;
-    transition: background-color 0.3s ease-in-out;
-}
-
-#sidebar li:hover{
-    background-color: #6f42c1;
-}
-
-#sidebar a {
-    color: #6f42c1;
-    text-decoration: underline;
-    transition: color 0.3s ease-in-out;
-}
-
-#sidebar a:visited {
-    color: #6f42c1;
-}
-
-#sidebar a:hover {
-    color: #ffffff;
-    text-decoration: none;
-}
-
-/*
-    content
-*/
-#content {
-    width: 85%;
-    position: absolute;
-    top: 0;
-    right: 0;
     padding-bottom: 5rem;
 }
 

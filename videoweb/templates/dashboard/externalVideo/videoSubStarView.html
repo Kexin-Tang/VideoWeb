@@ -15,22 +15,25 @@
     </h1>
 
     <div id="update-form-area">
-        ${updateSub()}
+        <div class="col-8" style="margin-left: 2rem">
+            ${tableVideosub()}
+            <div>
+                <button id="offcanvas-add" class="btn mb-2" data-bs-toggle="offcanvas" data-bs-target="#videosub"> 添加 </button>
+            </div>
+            ${offcanvas_sub()}
+
+            ${tableStar()}
+            <div>
+                <button id="offcanvas-add" class="btn mb-2" data-bs-toggle="offcanvas" data-bs-target="#videostar"> 添加 </button>
+            </div>
+            ${offcanvas_star()}
+        </div>
+        <div class="col-3">
+            ${updateSub()}
+        </div>
     </div>
 
-    <div class="col-8" style="margin-left: 2rem">
-        ${tableVideosub()}
-        <div>
-            <button id="offcanvas-add" class="btn mb-2" data-bs-toggle="offcanvas" data-bs-target="#videosub"> 添加 </button>
-        </div>
-        ${offcanvas_sub()}
 
-        ${tableStar()}
-        <div>
-            <button id="offcanvas-add" class="btn mb-2" data-bs-toggle="offcanvas" data-bs-target="#videostar"> 添加 </button>
-        </div>
-        ${offcanvas_star()}
-    </div>
     <div id="error-area" class="col-4">
         ${showError(error)}
     </div>
@@ -52,24 +55,19 @@
     <thead>
         <tr>
             <th>集数</th>
-            <th>链接</th>
-            <th>操作</th>
+            <th>编辑</th>
+            <th>删除</th>
         </tr>
     </thead>
     <tbody>
     % if details:
         % for detail in details:
         <tr>
-            <td>第 ${detail.number} 集</td>
-            <td>
-                <a href="${detail.url}">
-                    <p style="width:30vw; overflow: hidden; white-space: nowrap; text-overflow: ellipsis">
-                        ${detail.url}
-                    </p>
-                </a>
-            </td>
+            <td><a href="${detail.url}">第 ${detail.number} 集</a></td>
             <td>
                 <button class="btn updatesub-btn" data-id="${detail.id}" data-url="${detail.url}" data-number="${detail.number}">编辑</button>
+            </td>
+            <td>
                 <a href="${reverse('delete_sub', kwargs={'videoID': video.id, 'subID': detail.id})}">
                     <button class="btn">删除</button>
                 </a>

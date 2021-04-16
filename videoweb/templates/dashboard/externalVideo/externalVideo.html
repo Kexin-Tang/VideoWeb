@@ -19,10 +19,12 @@
 
     ${table()}
 
+    <div class="col-6 offset-3" style="text-align: center">
     % if user:
-    <button class="btn mb-1" id="create-form-btn" data-bs-toggle="modal" data-bs-target="#createForm">创建</button>
+        <button class="btn mb-1" id="create-form-btn" data-bs-toggle="modal" data-bs-target="#createForm">创建</button>
     ${modal()}
     % endif
+    </div>
 
     ${showError(error)}
 

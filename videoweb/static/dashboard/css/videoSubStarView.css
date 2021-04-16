@@ -34,10 +34,9 @@
 }
 
 #update-form-area {
-    width: 20%;
-    position: fixed;
-    right: 2rem;
-    top: 35%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 #update-form {
