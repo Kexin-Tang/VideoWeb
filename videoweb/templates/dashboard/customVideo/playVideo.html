@@ -1,0 +1,39 @@
+<%inherit file="../base.html"/>
+<%!
+    from django.shortcuts import reverse
+%>
+<%def name="title()">预览</%def>
+
+<%def name="css()"><link rel="stylesheet" href="/static/dashboard/css/custom/playVideo.css"></%def>
+
+<%def name="content()">
+    <h1>
+        <span>
+            <a href="${reverse('custom_video_detail', kwargs={'id': id})}"><button class="btn" id="back-button"><</button></a>
+        </span>
+        预览
+    </h1>
+
+    <div id="video-area">
+        <video controls src="${url}"></video>
+    </div>
+
+    <div id="error-area" class="col-4">
+        ${showError(error)}
+    </div>
+
+</%def>
+
+
+
+<!---------------------------- 主要是错误内容显示 --------------------------------->
+<%def name="showError(err)">
+    % if err:
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>失败: </strong> ${err}. 请重新尝试.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    % endif
+</%def>
+
+

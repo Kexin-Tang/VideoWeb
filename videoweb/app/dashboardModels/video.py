@@ -86,4 +86,15 @@ class VideoDetail(models.Model):
 
 
 
+class CustomVideo(models.Model):
+    video = models.ForeignKey(Video, related_name='customVideo', on_delete=models.CASCADE)
+    public_id = models.CharField(max_length=100, null=False, default='')
+    url = models.CharField(max_length=500, null=False)
+    name = models.CharField(max_length=50, null=False)
+
+    class Meta:
+        unique_together = ('video', 'public_id', 'name')
+
+
+
 

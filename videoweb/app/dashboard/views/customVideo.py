@@ -3,8 +3,8 @@ from app.dashboardModels.video import Video
 from django.views.generic import View
 from app.libs.base_render import render_to_response
 from app.dashboard.utils.permission import dashboardAuth
-from app.dashboardModels.video import VideoType, VideoSource, Nation, Video, VideoStar, IdentityType, VideoDetail
-from app.dashboard.utils.common import checkEnum
+from app.dashboardModels.video import VideoType, VideoSource, Nation, Video, VideoStar, IdentityType, CustomVideo
+from app.dashboard.utils.common import checkEnum, customVideoUpload, customVideoDelete
 from django.contrib.auth.models import User
 
 
@@ -129,17 +129,17 @@ class CustomVideoDetail(View):
         video = Video.objects.get(id=id)
 
         # 如果别的用户通过url强行访问别人的视频
-        if str(req.user.username) != str(video.user):
+        if not req.user.is_superuser and str(req.user.username) != str(video.user):
             return redirect('{}?error={}'.format(reverse('list_custom_video'), '您没有该视频内容或权限'))
 
         data['video'] = video
 
         # 查看视频相关的细节
-        exists = VideoDetail.objects.filter(video=video).exists()
+        exists = CustomVideo.objects.filter(video=video).exists()
         if not exists:
             data['detail'] = ''
         else:
-            detail = VideoDetail.objects.filter(video=video)
+            detail = CustomVideo.objects.filter(video=video)
             data['detail'] = detail
 
         return render_to_response(req, self.TEMPLATE, data=data)
@@ -162,7 +162,7 @@ class CustomVideoSub(View):
         if not exists:
             return Http404()
         video = Video.objects.get(pk=id)
-        details = VideoDetail.objects.filter(video=video)
+        details = CustomVideo.objects.filter(video=video).order_by('public_id')
 
         data['video'] = video
         data['details'] = details
@@ -173,58 +173,82 @@ class CustomVideoSub(View):
 
 '''
     创建剧集
-    @ TODO: 七牛云
 '''
 class AddCustomVideoSub(View):
     def post(self, req, id):
-        url = req.POST.get('url', '')
-        number = req.POST.get('number', '')
-        if not all([url, number]):
+        url = req.FILES.get('url', '')
+        name = req.POST.get('name', '')
+        if not all([url, name]):
             return redirect('{}?error={}'.format(reverse('custom_videosub', kwargs={'id': id}), '请将“剧集”表单填写完整'))
 
+        # 判断用户点击的视频是否存在
         exists = Video.objects.filter(pk=id).exists()
         if not exists:
             return redirect('{}?error={}'.format(reverse('custom_videosub', kwargs={'id': id}), '未找到该视频信息'))
 
+        # 找到对应的视频，查看当前添加的集数是否已经存在
         video = Video.objects.get(pk=id)
-        exists = Detail.objects.filter(video=video, number=number).exists()
+        exists = CustomVideo.objects.filter(video=video, name=name, url=url).exists()
         # 如果该剧集已经被加入了
         if exists:
             return redirect('{}?error={}'.format(reverse('custom_videosub', kwargs={'id': id}), '该剧集已经被添加，请勿重复添加'))
 
-        Detail.objects.create(video=video, url=url, number=number)
+        res = customVideoUpload(url)
+        targetURL = res['url']
+        public_id = res['public_id']
+
+        CustomVideo.objects.create(video=video, url=targetURL, public_id=public_id, name=name)
+
         return redirect(reverse('custom_videosub', kwargs={'id': id}))
 
+'''
+    预览与播放上传的视频
+'''
+class PlayCustomVideo(View):
+    TEMPLATE = 'dashboard/customVideo/playVideo.html'
+    def get(self, req, videoID, subID):
+        data = {}
+
+        exists = Video.objects.filter(pk=videoID).exists()
+        if not exists:
+            return redirect('{}?error={}'.format(reverse('custom_videosub', kwargs={'id': videoID}), 'Not Found'))
+
+        exists = CustomVideo.objects.filter(pk=subID).exists()
+        if not exists:
+            return redirect('{}?error={}'.format(reverse('custom_videosub', kwargs={'id': videoID}), 'Not Found'))
+
+        data['url'] = CustomVideo.objects.get(pk=subID).url
+        data['id'] = videoID
+        return render_to_response(req, self.TEMPLATE, data=data)
 
 '''
     删除剧集
-    @ TODO: 七牛云
 '''
 class DeleteCustomVideoSub(View):
     def get(self, req, videoID, subID):
         exists = Video.objects.filter(pk=videoID).exists()
         if not exists:
-            return Http404()
+            return redirect('{}?error={}'.format(reverse('custom_videosub', kwargs={'id': videoID}), 'Not Found'))
 
-        exists = Detail.objects.filter(pk=subID).exists()
+        exists = CustomVideo.objects.filter(pk=subID).exists()
         if not exists:
-            return Http404()
+            return redirect('{}?error={}'.format(reverse('custom_videosub', kwargs={'id': videoID}), 'Not Found'))
 
-        Detail.objects.filter(pk=subID).delete()
+        video = CustomVideo.objects.get(pk=subID)
+        customVideoDelete(video.public_id)              # 删除云端视频
+        CustomVideo.objects.filter(pk=subID).delete()   # 删除数据库内容
         return redirect(reverse('custom_videosub', kwargs={'id': videoID}))
 
 
 '''
     更新剧集
-    @ TODO: 七牛云
 '''
 class UpdateCustomVideoSub(View):
     def post(self, req, id):
-        number = req.POST.get('number', '')
-        url = req.POST.get('url', '')
+        name = req.POST.get('name', '')
         subID = req.POST.get('id', '')
 
-        if not all([number, url]):
+        if not all([name]):
             return redirect('{}?error={}'.format(reverse('custom_videosub', kwargs={'id': id}), '请填写相应字段'))
 
 
@@ -232,13 +256,12 @@ class UpdateCustomVideoSub(View):
         if not exists:
             return redirect('{}?error={}'.format(reverse('custom_videosub', kwargs={'id': id}), '未找到对应的视频'))
 
-        exists = Detail.objects.filter(pk=subID).exists()
+        exists = CustomVideo.objects.filter(pk=subID).exists()
         if not exists:
             return redirect('{}?error={}'.format(reverse('custom_videosub', kwargs={'id': id}), '未找到对应的视频'))
 
-        Detail.objects.filter(pk=subID).update(
-            number=number,
-            url=url
+        CustomVideo.objects.filter(pk=subID).update(
+            name=name,
         )
 
         return redirect(reverse('custom_videosub', kwargs={'id': id}))

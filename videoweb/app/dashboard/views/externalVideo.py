@@ -86,12 +86,8 @@ class VideoDetail(View):
         # 获取视频
         exists = Video.objects.filter(id=id).exists()
         if not exists:
-            return redirect('{}?error={}'.format(reverse('list_custom_video'), '没有该视频'))
+            return redirect('{}?error={}'.format(reverse('external_video'), '没有该视频'))
         video = Video.objects.get(id=id)
-
-        # 如果别的用户通过url强行访问别人的视频
-        if str(req.user.username) != str(video.user):
-            return redirect('{}?error={}'.format(reverse('list_custom_video'), '您没有该视频内容或权限'))
 
         data['video'] = video
 
@@ -214,11 +210,11 @@ class DeleteVideoSub(View):
     def get(self, req, videoID, subID):
         exists = Video.objects.filter(pk=videoID).exists()
         if not exists:
-            return Http404()
+            return redirect('{}?error={}'.format(reverse('video_sub_star_view', kwargs={'id': videoID}), 'Not Found'))
 
         exists = Detail.objects.filter(pk=subID).exists()
         if not exists:
-            return Http404()
+            return redirect('{}?error={}'.format(reverse('video_sub_star_view', kwargs={'id': videoID}), 'Not Found'))
 
         Detail.objects.filter(pk=subID).delete()
         return redirect(reverse('video_sub_star_view', kwargs={'id': videoID}))

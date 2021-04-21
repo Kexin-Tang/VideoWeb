@@ -4,7 +4,7 @@
     from app.dashboardModels.video import IdentityType
 %>
 <%def name="title()">编辑剧集</%def>
-<%def name="css()"><link href="/static/dashboard/css/external/videoSubStarView.css" rel="stylesheet"></%def>
+<%def name="css()"><link href="/static/dashboard/css/custom/videoSubView.css" rel="stylesheet"></%def>
 
 <%def name="content()">
     <h1>
@@ -14,31 +14,21 @@
         编辑剧集
     </h1>
 
-    <div id="update-form-area">
-        <div class="col-8" style="margin-left: 2rem">
-            ${tableVideosub()}
-            <div>
-                <button id="offcanvas-add" class="btn mb-2" data-bs-toggle="offcanvas" data-bs-target="#videosub"> 添加 </button>
-            </div>
-            ${offcanvas_sub()}
+    <div style="margin-left: 2rem">
+        ${tableVideosub()}
+        <div>
+            <button id="offcanvas-add" class="btn mb-2" data-bs-toggle="offcanvas" data-bs-target="#videosub"> 添加 </button>
         </div>
-        <div class="col-3">
-            ${updateSub()}
-        </div>
+        ${offcanvas_sub()}
     </div>
-
 
     <div id="error-area" class="col-4">
         ${showError(error)}
     </div>
-    <div id="edit-filed" class="col-3">
-
-    </div>
-
 </%def>
 
 <%def name="js()">
-    <script src="/static/dashboard/js/updateSub.js"></script>
+    <script src="/static/dashboard/js/custom/updateSub.js"></script>
 </%def>
 
 
@@ -48,7 +38,7 @@
 <table class="table">
     <thead>
         <tr>
-            <th>集数</th>
+            <th>名称</th>
             <th>编辑</th>
             <th>删除</th>
         </tr>
@@ -57,9 +47,10 @@
     % if details:
         % for detail in details:
         <tr>
-            <td><a href="${detail.url}">第 ${detail.number} 集</a></td>
+            <td><a href="${reverse('custom_video_play', kwargs={'videoID': video.id, 'subID': detail.id})}">${detail.name}</a></td>
             <td>
-                <button class="btn updatesub-btn" data-id="${detail.id}" data-url="${detail.url}" data-number="${detail.number}">编辑</button>
+                <button class="btn editCustomVideo-btn" data-id="${detail.id}" data-name="${detail.name}" data-bs-toggle="modal" data-bs-target="#editForm">编辑</button>
+                ${modal()}
             </td>
             <td>
                 <a href="${reverse('custom_videosub_delete', kwargs={'videoID': video.id, 'subID': detail.id})}">
@@ -74,23 +65,31 @@
 </%def>
 
 
-
-
-
-<!---------------------------- 修改剧集表单 --------------------------------->
-<%def name="videosubForm()">
-<form method="POST" action="${reverse('custom_videosub_add', kwargs={'id': video.id})}">
-    ${csrf_token}
-    <div class="form-floating mb-1">
-        <input type="number" class="form-control" id="videoNumber" name="number" min="1">
-        <label for="videoNumber">剧集</label>
+<!---------------------------- 弹出修改剧集的框 ------------------------------->
+<%def name="modal()">
+    <div class="modal fade" id="editForm" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #6f42c1;">
+                    <h5 class="modal-title" style="color: #ffffff;">编辑已上传视频</h5>
+                    <button style="background-color: #ffffff;" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!------------ 为form ---------------->
+                <div class="modal-body">
+                    <form method="POST" action="${reverse('custom_videosub_update', kwargs={'id': video.id})}" id="edit-certain-video">
+                        ${csrf_token}
+                        <div class="form-floating mb-1">
+                            <input type="text" class="form-control" id="updateSub-name" name="name">
+                            <label for="updateSub-name">名称</label>
+                        </div>
+                        <input type="hidden" id="updateSub-id" name="id">
+                        <button class="btn mb-1">修改</button>
+                    </form>
+                <!------------------------------------>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="form-floating mb-1">
-        <input type="text" class="form-control" id="url" name="url" placeholder="url">
-        <label for="url">URL</label>
-    </div>
-    <button class="btn mb-1">添加新剧集</button>
-</form>
 </%def>
 
 
@@ -114,38 +113,17 @@
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
-            ${videosubForm()}
+            <form enctype="multipart/form-data" method="POST" action="${reverse('custom_videosub_add', kwargs={'id': video.id})}">
+                ${csrf_token}
+                <div class="form-floating mb-1">
+                    <input type="text" class="form-control" id="videoName" name="name">
+                    <label for="videoName">名称</label>
+                </div>
+                <div class="input-group mb-1">
+                    <input type="file" id="url" name="url" class="form-control">
+                </div>
+                <button class="btn mb-1">添加新剧集</button>
+            </form>
         </div>
     </div>
-</%def>
-
-<!---------------------------- 演员侧边弹出栏 -------------------------------->
-<%def name="offcanvas_star()">
-<div class="offcanvas offcanvas-end" id="videostar" aria-labelledby="offcanvasRightLabel">
-        <div class="offcanvas-header">
-            <h5 id="offcanvasRightLabel">新增人员信息</h5>
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            ${videostarForm()}
-        </div>
-    </div>
-</%def>
-
-
-<!--------------------------- 剧集的编辑表单 ----------------------------------->
-<%def name="updateSub()">
-<form method="POST" action="${reverse('custom_videosub_update', kwargs={'id': video.id})}" id="update-form">
-    ${csrf_token}
-    <div class="form-floating mb-1">
-        <input type="number" class="form-control" id="updateSub-number" name="number" min="1">
-        <label for="updateSub-number">剧集</label>
-    </div>
-    <div class="form-floating mb-1">
-        <input type="text" class="form-control" id="updateSub-url" name="url" placeholder="url">
-        <label for="updateSub-url">URL</label>
-    </div>
-    <input type="hidden" id="updateSub-id" name="id" value="">
-    <button class="btn mb-1">修改</button>
-</form>
 </%def>

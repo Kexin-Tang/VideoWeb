@@ -46,7 +46,7 @@
         <div class="me-2" role="group">
             % if detail:
                 % for single in detail:
-                <a href="${single.url}"><button type="button" class="btn">${single.number}</button></a>
+                <a href="${reverse('custom_video_play', kwargs={'videoID': video.id, 'subID': single.id})}"><button type="button" class="btn">${single.name}</button></a>
                 % endfor
             % endif
         </div>
