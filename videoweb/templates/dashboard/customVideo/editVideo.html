@@ -4,11 +4,11 @@
     from app.dashboardModels.video import VideoType, VideoSource, Nation
 %>
 <%def name="title()">编辑信息</%def>
-<%def name="css()"><link rel="stylesheet" href="/static/dashboard/css/external/editVideo.css"></%def>
+<%def name="css()"><link rel="stylesheet" href="/static/dashboard/css/custom/editVideo.css"></%def>
 <%def name="content()">
     <h1>
         <span>
-            <a href="${reverse('external_video')}"><button class="btn" id="back-button"><</button></a>
+            <a href="${reverse('list_custom_video')}"><button class="btn" id="back-button"><</button></a>
         </span>
         编辑信息
     </h1>
@@ -19,7 +19,7 @@
 
 <!---------------------------- 主要是表单内容 --------------------------------->
 <%def name="createForm()">
-<form method="POST" action="${reverse('external_video_edit', kwargs={'id': video.id})}" id="create-video-form" class="col-4 offset-4">
+<form method="POST" action="${reverse('custom_video_edit', kwargs={'id': video.id})}" id="create-video-form" class="col-4 offset-4">
     ${csrf_token}
     <div class="form-floating mb-1">
         <input type="text" class="form-control" id="videoName" name="videoName" placeholder="videoName" value="${video.videoName}">
@@ -42,17 +42,7 @@
         <label for="videoType">视频种类</label>
     </div>
     <div class="form-floating mb-1">
-        <select class="form-select" id="videoSource" name="videoSource">
-            % for videosrc in VideoSource:
-                % if videosrc != VideoSource('custom'):
-                    % if videosrc.value == video.source:
-                    <option value="${videosrc.value}" selected>${videosrc.label}</option>
-                    % else:
-                    <option value="${videosrc.value}">${videosrc.label}</option>
-                    % endif
-                % endif
-            % endfor
-        </select>
+        <input type="text" class="form-control" placeholder="videoSource" name="videoSource" id="videoSource" value="用户自制" disabled>
         <label for="videoSource">视频源</label>
     </div>
     <div class="form-floating mb-1">

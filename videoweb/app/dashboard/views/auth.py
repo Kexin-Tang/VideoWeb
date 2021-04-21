@@ -120,7 +120,8 @@ class Register(View):
 
         User.objects.create_user(
             username=username,
-            password=password
+            password=password,
+            is_staff=True
         )
 
         user = User.objects.get(username=username)

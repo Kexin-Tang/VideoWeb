@@ -1,5 +1,6 @@
 # coding:utf-8
 from django.db import models
+from django.contrib.auth.models import User
 from enum import Enum
 
 class VideoType(Enum):
@@ -44,6 +45,7 @@ IdentityType.director.label = '导演'
 
 
 class Video(models.Model):
+    user = models.ForeignKey(User, related_name='video', on_delete=models.CASCADE)
     videoName = models.CharField(max_length=100, null=False)
     image = models.CharField(max_length=500, default='')
     videoType = models.CharField(max_length=50, default=VideoType.other.value)
@@ -55,7 +57,7 @@ class Video(models.Model):
     updateTime = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unique_together = ('videoName', 'videoType', 'source', 'nation')
+        unique_together = ('user', 'videoName', 'videoType', 'source', 'nation')
 
     def __str__(self):
         return self.videoName

@@ -1,0 +1,145 @@
+<%inherit file="../base.html"/>
+<%!
+    from django.shortcuts import reverse
+    from app.dashboardModels.video import VideoType, VideoSource, Nation
+%>
+<%def name="title()">自定义视频</%def>
+
+
+
+
+
+<%def name="content()">
+    <h1>
+        <span>
+            <a href="${reverse('dashboard_index')}"><button class="btn" id="back-button"><</button></a>
+        </span>
+        自定义视频
+    </h1>
+
+    ${table()}
+
+    <div class="col-6 offset-3" style="text-align: center">
+    % if user:
+        <button class="btn mb-1" id="create-form-btn" data-bs-toggle="modal" data-bs-target="#createForm">上传</button>
+    ${modal()}
+    % endif
+    </div>
+
+    ${showError(error)}
+
+</%def>
+
+
+
+
+<%def name="css()">
+<link href="/static/dashboard/css/external/listExternalVideo.css" rel="stylesheet">
+</%def>
+
+
+
+
+
+
+
+
+<!---------------------------- 主要是表单内容 --------------------------------->
+<%def name="createForm()">
+    <form method="POST" action="${reverse('list_custom_video')}" class="col-8 offset-2" id="create-video-form">
+    ${csrf_token}
+    <div class="form-floating mb-1">
+        <input type="text" class="form-control" id="videoName" name="videoName" placeholder="videoName">
+        <label for="videoName">标题</label>
+    </div>
+    <div class="form-floating mb-1">
+        <input type="text" class="form-control" id="image" name="image" placeholder="image">
+        <label for="image">图片</label>
+    </div>
+    <div class="form-floating mb-1">
+        <select class="form-select" id="videotype" name="videoType">
+            % for videotype in VideoType:
+                <option value="${videotype.value}">${videotype.label}</option>
+            % endfor
+        </select>
+        <label for="videotype">视频种类</label>
+    </div>
+    <div class="form-floating mb-1">
+        <select class="form-select" id="nation" name="nation">
+            % for nation in Nation:
+                <option value="${nation.value}">${nation.value}</option>
+            % endfor
+        </select>
+        <label for="nation">国家</label>
+    </div>
+    <div class="form-floating mb-1">
+        <textarea class="form-control" placeholder="Leave a description here" id="desc" style="height: 100px" name="desc"></textarea>
+        <label for="desc">简介</label>
+    </div>
+    <input type="hidden" value="custom" name="videoSource">
+    <button class="btn mb-1">确认创建</button>
+    </form>
+</%def>
+
+<!---------------------------- 主要是按键弹出表单的逻辑 --------------------------------->
+<%def name="modal()">
+    <div class="modal fade" id="createForm" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #6f42c1;">
+                    <h5 class="modal-title" style="color: #ffffff;">上传视频</h5>
+                    <button style="background-color: #ffffff;" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ${createForm()}
+                </div>
+            </div>
+        </div>
+    </div>
+</%def>
+
+
+
+<!---------------------------- 主要是错误内容显示 --------------------------------->
+<%def name="showError(err)">
+    % if err:
+        <div id="errorwrapper">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>失败: </strong> ${err}.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        </div>
+    % endif
+</%def>
+
+
+<!---------------------------- 主要是数据库信息的呈现 --------------------------------->
+<%def name="table()">
+<table class="table">
+    <thead>
+        <tr>
+            <th>标题</th>
+            <th>图片</th>
+            <th>种类</th>
+            <th>国家</th>
+            <th>简介</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        % for video in videos:
+        <tr>
+            <td>${video.videoName}</td>
+            <td><img class="video-image-display" src="${video.image}"/></td>
+            <td>${VideoType(video.videoType).label}</td>
+            <td>${Nation(video.nation).value}</td>
+            <td><p class="description">${video.desc}</p></td>
+            <td>
+                <a href="${reverse('custom_video_edit', kwargs={'id': video.id})}"><button class="btn">编辑</button></a>
+                <a href="${reverse('custom_video_detail', kwargs={'id': video.id})}"><button class="btn">查看</button></a>
+            </td>
+        </tr>
+        % endfor
+    </tbody>
+</table>
+</%def>

@@ -4,7 +4,7 @@
     from app.dashboardModels.video import VideoType, VideoSource, Nation, IdentityType
 %>
 <%def name="title()">详细信息</%def>
-<%def name="css()"><link href="/static/dashboard/css/external/detailVideo.css" rel="stylesheet"></%def>
+<%def name="css()"><link href="/static/dashboard/css/custom/detailVideo.css" rel="stylesheet"></%def>
 
 
 
@@ -12,7 +12,7 @@
 <!--------------------------------- 显示标题，国别，类型等内容 ------------------------------->
 <div id="first">
     <span>
-        <a href="${reverse('external_video')}"><button class="btn" id="back-button"><</button></a>
+        <a href="${reverse('list_custom_video')}"><button class="btn" id="back-button"><</button></a>
     </span>
     <span id="title">
         <span class="badge">${VideoSource[video.source].label}</span>
@@ -33,15 +33,6 @@
     <div id="detail-area">
         <div id="desc-area">
             <p>${video.desc}</p>
-        </div>
-        <div id="star-area">
-            % if stars:
-            <ul>
-                % for star in stars:
-                <li style="display: inline-block;">${star.name}(${IdentityType(star.identity).label})  </li>
-                % endfor
-            </ul>
-            % endif
         </div>
     </div>
 </div>
@@ -67,9 +58,7 @@
 
 <!--------------------------------- 显示按钮去更细致的更改内容 ------------------------------->
 <div id="forth">
-    % if user:
-    <a href="${reverse('video_sub_star_view', kwargs={'id': video.id})}"><button type="button" class="btn">编辑演员和剧集</button></a>
-    % endif
+    <a href="${reverse('custom_videosub', kwargs={'id': video.id})}"><button type="button" class="btn">编辑剧集</button></a>
 </div>
 
 

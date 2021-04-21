@@ -2,6 +2,7 @@ from django.urls import path
 from app.dashboard.views.base import Index
 from .views.auth import Login, Logout, AdminManage, UpdateAdminStatus, Register
 from .views.externalVideo import ExternalVideo, VideoDetail, EditVideo, VideoSubAndStarView, DeleteVideoSub, DeleteVideoStar, AddVideoStar, AddVideoSub, ChangeStatus, UpdateVideoSub
+from .views.customVideo import ListCustomVideo, CustomEditVideo, CustomVideoDetail, CustomVideoSub, AddCustomVideoSub, DeleteCustomVideoSub, UpdateCustomVideoSub
 
 
 
@@ -25,5 +26,11 @@ urlpatterns = [
     path('video/external/changestatus/<int:id>', ChangeStatus.as_view(), name='external_video_status'),
     path('video/external/updatesub/<int:id>', UpdateVideoSub.as_view(), name='update_sub'),
 
-
+    path('video/custom', ListCustomVideo.as_view(), name="list_custom_video"),
+    path('video/custom/<int:id>', CustomVideoDetail.as_view(), name="custom_video_detail"),
+    path('video/custom/edit/<int:id>', CustomEditVideo.as_view(), name="custom_video_edit"),
+    path('video/custom/view/<int:id>', CustomVideoSub.as_view(), name='custom_videosub'),
+    path('video/custom/addsub/<int:id>', AddCustomVideoSub.as_view(), name='custom_videosub_add'),
+    path('video/custom/deletesub/<int:videoID>/<int:subID>', DeleteCustomVideoSub.as_view(), name="custom_videosub_delete"),
+    path('video/custom/updatesub/<int:id>', UpdateCustomVideoSub.as_view(), name="custom_videosub_update"),
 ]

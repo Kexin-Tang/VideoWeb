@@ -14,7 +14,7 @@ from django.http import Http404
     视频主页，显示视频列表
 '''
 class ExternalVideo(View):
-    TEMPLATE = 'dashboard/externalVideo/externalVideo.html'
+    TEMPLATE = 'dashboard/externalVideo/listExternalVideo.html'
 
     @dashboardAuth
     def get(self, req):
@@ -44,6 +44,8 @@ class ExternalVideo(View):
         nation = req.POST.get('nation')
         desc = req.POST.get('desc')
 
+        user = req.user
+
         # 如果有该填写的区域为空
         if not all([videoName, image, videoType, videoSource, nation, desc]):
             return redirect('{}?error={}'.format(reverse('external_video'), '请确保所有内容均被正确填写'))
@@ -54,6 +56,7 @@ class ExternalVideo(View):
 
         # 都无问题后存入DB
         video = Video(
+            user=user,
             videoName=videoName,
             image=image,
             videoType=videoType,
@@ -81,7 +84,15 @@ class VideoDetail(View):
             data['user'] = 'admin'
 
         # 获取视频
+        exists = Video.objects.filter(id=id).exists()
+        if not exists:
+            return redirect('{}?error={}'.format(reverse('list_custom_video'), '没有该视频'))
         video = Video.objects.get(id=id)
+
+        # 如果别的用户通过url强行访问别人的视频
+        if str(req.user.username) != str(video.user):
+            return redirect('{}?error={}'.format(reverse('list_custom_video'), '您没有该视频内容或权限'))
+
         data['video'] = video
 
         # 查看视频相关的细节
@@ -124,19 +135,21 @@ class EditVideo(View):
 
 
     def post(self, req, id):
+        videoName = req.POST.get('videoName')
         image = req.POST.get('image')
         videoType = req.POST.get('videoType')
         videoSource = req.POST.get('videoSource')
         nation = req.POST.get('nation')
         desc = req.POST.get('desc')
 
-        if not all([image, videoType, videoSource, nation, desc]):
+        if not all([videoName, image, videoType, videoSource, nation, desc]):
             return redirect('{}?error={}'.format(reverse('external_video_edit', kwargs={'id': id}), '请确保所有内容均被正确填写'))
 
         if not checkEnum([VideoType, VideoSource, Nation], [videoType, videoSource, nation]):
             return redirect('{}?error={}'.format(reverse('external_video_edit', kwargs={'id': id}), '种类、国家或视频源选择错误'))
 
         Video.objects.filter(pk=id).update(
+            videoName=videoName,
             image=image,
             videoType=videoType,
             source=videoSource,

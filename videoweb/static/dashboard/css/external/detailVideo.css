@@ -1,0 +1,128 @@
+/*
+    第一部分
+*/
+#first{
+    width: 100%;
+    height: 5rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+#title {
+    font-size: 2rem;
+    margin-left: 2rem;
+}
+
+.badge {
+    background-color: #6f42c1;
+}
+
+/*
+    第二部分
+*/
+#second {
+    width: 100%;
+    height: 22rem;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+/*
+    左半部分
+*/
+#img-area {
+    height: 100%;
+    width: 50%;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px dashed #6f42c1;
+    border-radius: 1rem;
+    margin: 0 2rem;
+}
+
+#img-area img {
+    width: 100%;
+    height: 100%;
+    object-fit:none;
+    object-position: center;
+}
+
+/*
+    右半部分
+*/
+#detail-area{
+    width:50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/*
+    右半部分的上侧
+*/
+#desc-area {
+    width:95%;
+    height: 70%;
+    padding: 1rem;
+    background-color: #6f42c1;
+    color: #ffffff;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+/*
+    右半部分的下侧
+*/
+#star-area {
+    width: 95%;
+    height: 30%;
+    padding: 1rem;
+}
+
+#third {
+    width:100%;
+    position: relative;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    align-content: start;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+#forth {
+    width: 30%;
+    height: 10%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-left: 2rem;
+}
+
+a {
+    color: #6f42c1;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+
+#back-button {
+    border-radius: 50%;
+    background-color: #6f42c1;
+    color: #ffffff;
+}
+
+#back-button:hover {
+    background-color: #ffffff;
+    color: #6f42c1;
+}
