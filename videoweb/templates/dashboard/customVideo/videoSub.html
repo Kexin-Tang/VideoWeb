@@ -47,7 +47,11 @@
     % if details:
         % for detail in details:
         <tr>
+            % if detail.url:
             <td><a href="${reverse('custom_video_play', kwargs={'videoID': video.id, 'subID': detail.id})}">${detail.name}</a></td>
+            % else:
+            <td>${detail.name} 正在处理...</td>
+            % endif
             <td>
                 <button class="btn editCustomVideo-btn" data-id="${detail.id}" data-name="${detail.name}" data-bs-toggle="modal" data-bs-target="#editForm">编辑</button>
                 ${modal()}

@@ -6,6 +6,9 @@ import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 
+from app.tasks.task import myUpload, myDelete
+from app.dashboardModels.video import CustomVideo
+
 '''
     用于检测枚举类型是否正确
 '''
@@ -22,15 +25,32 @@ def checkEnum(enumList, inputList):
 '''
     用于让用户上传视频到cloudinary
 '''
-def customVideoUpload(video):
-    videoFile = video.name
-    videoFile = videoFile.replace(' ', '_')                         # 去掉文件名中的空格
-    videoFile = os.path.splitext(videoFile)[0]                      # 去掉文件类型
-    videoFile = '{}_{}'.format(int(time.time()), videoFile)         # 加上时间戳
-    public_id = '{}/{}'.format(settings.cloudinary_file, videoFile) # 获取cloudinary中存储的名字
+def customVideoUpload(file, video, name):
 
-    res = cloudinary.uploader.upload(video, resource_type = "video", public_id=public_id)
-    return res
+    BASE_PATH = settings.BASE_DIR
+    storeFolder = os.path.join(BASE_PATH, 'app/temp')
+
+    videoFile = file.name
+    videoFile = videoFile.replace(' ', '_')                         # 去掉文件名中的空格
+    videoFile = '{}_{}'.format(int(time.time()), videoFile)         # 加上时间戳
+    public_id = '{}/{}'.format(settings.cloudinary_file, os.path.splitext(videoFile)[0]) # 获取cloudinary中存储的名字
+
+    # 将视频存储到temp
+    transformFile = os.path.join(storeFolder, videoFile)
+    with open(transformFile, 'wb') as f:
+        for content in file.chunks():
+            f.write(content)
+
+    # 先创建内容，保证前端能预览，之后再更新url即可
+    newVideo = CustomVideo.objects.create(
+        video=video,
+        url='',
+        public_id=public_id,
+        name=name
+    )
+
+    # 异步队列
+    myUpload.delay(transformFile, public_id, newVideo.id)
 
 
 '''
@@ -38,5 +58,5 @@ def customVideoUpload(video):
 '''
 def customVideoDelete(public_id):
     public_id = [public_id]     # 注意，public_id需要是一个 list
-    cloudinary.api.delete_resources(public_id, resource_type='video')
+    myDelete.delay(public_id)
 

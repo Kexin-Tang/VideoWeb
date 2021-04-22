@@ -176,9 +176,9 @@ class CustomVideoSub(View):
 '''
 class AddCustomVideoSub(View):
     def post(self, req, id):
-        url = req.FILES.get('url', '')
+        file = req.FILES.get('url', '')
         name = req.POST.get('name', '')
-        if not all([url, name]):
+        if not all([file, name]):
             return redirect('{}?error={}'.format(reverse('custom_videosub', kwargs={'id': id}), '请将“剧集”表单填写完整'))
 
         # 判断用户点击的视频是否存在
@@ -188,16 +188,12 @@ class AddCustomVideoSub(View):
 
         # 找到对应的视频，查看当前添加的集数是否已经存在
         video = Video.objects.get(pk=id)
-        exists = CustomVideo.objects.filter(video=video, name=name, url=url).exists()
+        exists = CustomVideo.objects.filter(video=video, name=name).exists()
         # 如果该剧集已经被加入了
         if exists:
             return redirect('{}?error={}'.format(reverse('custom_videosub', kwargs={'id': id}), '该剧集已经被添加，请勿重复添加'))
 
-        res = customVideoUpload(url)
-        targetURL = res['url']
-        public_id = res['public_id']
-
-        CustomVideo.objects.create(video=video, url=targetURL, public_id=public_id, name=name)
+        customVideoUpload(file, video, name)    # 负责上传内容至云端，并保存入数据库
 
         return redirect(reverse('custom_videosub', kwargs={'id': id}))
 
