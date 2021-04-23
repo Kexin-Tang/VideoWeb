@@ -5,24 +5,11 @@
     width: 15%;
 }
 
-#offcanvas-add {
-    background-color: #6f42c1;
-    color: #ffffff;
-    width: 100%;
+td {
+    text-align: center;
+    vertical-align: middle;
 }
 
-#offcanvas-add:hover {
-    background-color: #ffffff;
-    color: #6f42c1;
-}
-
-#back-button {
-    border-radius: 50%;
-    background-color: #6f42c1;
-    color: #ffffff;
-}
-
-#back-button:hover {
-    background-color: #ffffff;
-    color: #6f42c1;
+th {
+    text-align: center;
 }

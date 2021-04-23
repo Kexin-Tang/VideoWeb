@@ -32,16 +32,30 @@ h1 {
     margin: 2rem;
 }
 
-.btn {
+.btn-purple-outline {
     border: 2px solid #6f42c1;
     background-color: #ffffff;
     color: #6f42c1;
+    transition: 0.3s cubic-bezier(0.45, 0, 0.55, 1);
 }
 
-.btn:hover {
+.btn-purple-outline:hover {
     background-color: #6f42c1;
     color: #ffffff;
 }
+
+
+.btn-purple {
+    background-color: #6f42c1;
+    color: #ffffff;
+    transition: 0.3s cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+.btn-purple:hover {
+    background-color: #5A349E;
+    color: #ffffff;
+}
+
 
 .paginator {
     position: absolute;
@@ -63,12 +77,11 @@ h1 {
 
 
 #back-button {
-    border-radius: 50%;
     background-color: #6f42c1;
     color: #ffffff;
+    transition: 0.3s cubic-bezier(0.45, 0, 0.55, 1);
 }
 
 #back-button:hover {
-    background-color: #ffffff;
-    color: #6f42c1;
+    border-radius: 50%;
 }

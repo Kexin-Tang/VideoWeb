@@ -50,7 +50,8 @@ def customVideoUpload(file, video, name):
     )
 
     # 异步队列
-    myUpload.delay(transformFile, public_id, newVideo.id)
+    task = myUpload.delay(transformFile, public_id, newVideo.id)
+    return task.id
 
 
 '''

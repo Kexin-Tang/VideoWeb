@@ -21,7 +21,7 @@
 
     <div class="col-6 offset-3" style="text-align: center">
     % if user:
-        <button class="btn mb-1" id="create-form-btn" data-bs-toggle="modal" data-bs-target="#createForm">上传</button>
+        <button class="btn btn-purple mb-1" id="create-form-btn" data-bs-toggle="modal" data-bs-target="#createForm">上传</button>
     ${modal()}
     % endif
     </div>
@@ -77,7 +77,7 @@
         <label for="desc">简介</label>
     </div>
     <input type="hidden" value="custom" name="videoSource">
-    <button class="btn mb-1">确认创建</button>
+    <button class="btn btn-purple mb-1">确认创建</button>
     </form>
 </%def>
 
@@ -135,8 +135,8 @@
             <td>${Nation(video.nation).value}</td>
             <td><p class="description">${video.desc}</p></td>
             <td>
-                <a href="${reverse('custom_video_edit', kwargs={'id': video.id})}"><button class="btn">编辑</button></a>
-                <a href="${reverse('custom_video_detail', kwargs={'id': video.id})}"><button class="btn">查看</button></a>
+                <a href="${reverse('custom_video_edit', kwargs={'id': video.id})}"><button class="btn btn-purple-outline">编辑</button></a>
+                <a href="${reverse('custom_video_detail', kwargs={'id': video.id})}"><button class="btn btn-purple-outline">查看</button></a>
             </td>
         </tr>
         % endfor

@@ -6,6 +6,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 import django
 django.setup()
 
-app = celery.Celery(main="videoweb", broker='redis://localhost:6379/2')
+app = celery.Celery(main="videoweb", broker='redis://localhost:6379/2', backend='redis://localhost:6379/3')
 
 app.autodiscover_tasks(['app.tasks'])

@@ -6,6 +6,8 @@
 <%def name="title()">编辑剧集</%def>
 <%def name="css()"><link href="/static/dashboard/css/custom/videoSubView.css" rel="stylesheet"></%def>
 
+
+
 <%def name="content()">
     <h1>
         <span>
@@ -17,7 +19,7 @@
     <div style="margin-left: 2rem">
         ${tableVideosub()}
         <div>
-            <button id="offcanvas-add" class="btn mb-2" data-bs-toggle="offcanvas" data-bs-target="#videosub"> 添加 </button>
+            <button style="width: 100%" class="btn btn-purple mb-2" data-bs-toggle="offcanvas" data-bs-target="#videosub"> 添加 </button>
         </div>
         ${offcanvas_sub()}
     </div>
@@ -29,6 +31,24 @@
 
 <%def name="js()">
     <script src="/static/dashboard/js/custom/updateSub.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+	        $(".refresh").click(function() {
+	            let task_id = $('#task_id').val();
+	            $.ajax({
+                    url: "${reverse('checkStatus')}",
+                    type: "GET",
+                    data: {"task_id": task_id},
+                    success: function(result){
+                        let status = result['status'];  // false or true
+                        if(status===true){
+                            location.reload();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 </%def>
 
 
@@ -38,28 +58,49 @@
 <table class="table">
     <thead>
         <tr>
-            <th>名称</th>
-            <th>编辑</th>
-            <th>删除</th>
+            <th style="width: 65%;">名称</th>
+            <th style="width: 10%;">编辑</th>
+            <th style="width: 10%;">删除</th>
+            <th style="width: 15%;">状态</th>
         </tr>
     </thead>
     <tbody>
     % if details:
         % for detail in details:
         <tr>
-            % if detail.url:
-            <td><a href="${reverse('custom_video_play', kwargs={'videoID': video.id, 'subID': detail.id})}">${detail.name}</a></td>
-            % else:
-            <td>${detail.name} 正在处理...</td>
-            % endif
             <td>
-                <button class="btn editCustomVideo-btn" data-id="${detail.id}" data-name="${detail.name}" data-bs-toggle="modal" data-bs-target="#editForm">编辑</button>
-                ${modal()}
+            % if detail.url:
+                <a href="${reverse('custom_video_play', kwargs={'videoID': video.id, 'subID': detail.id})}">${detail.name}</a>
+            % else:
+                ${detail.name}
+            % endif
             </td>
             <td>
+            % if detail.url:
+                <button class="btn btn-purple-outline editCustomVideo-btn" data-id="${detail.id}" data-name="${detail.name}" data-bs-toggle="modal" data-bs-target="#editForm">编辑</button>
+                ${modal()}
+            % else:
+                <div class="spinner-border text-warning" role="status" style="display: inline-block">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            % endif
+            </td>
+            <td>
+            % if detail.url:
                 <a href="${reverse('custom_videosub_delete', kwargs={'videoID': video.id, 'subID': detail.id})}">
-                    <button class="btn">删除</button>
+                    <button class="btn btn-danger" class="delete-btn">删除</button>
                 </a>
+            % else:
+                <span class="text-warning" style="font-weight: bolder">等待上传...</span>
+            % endif
+            </td>
+            <td>
+                % if detail.url:
+                    <img src="https://img.icons8.com/material-sharp/24/26e07f/checked-2.png"/>
+                % else:
+                    <button class="btn btn-warning refresh">刷新</button>
+                    <input type="hidden" id="task_id" value="${task_id}">
+                % endif
             </td>
         </tr>
         % endfor
@@ -87,7 +128,7 @@
                             <label for="updateSub-name">名称</label>
                         </div>
                         <input type="hidden" id="updateSub-id" name="id">
-                        <button class="btn mb-1">修改</button>
+                        <button class="btn btn-purple mb-1">修改</button>
                     </form>
                 <!------------------------------------>
                 </div>
@@ -126,7 +167,7 @@
                 <div class="input-group mb-1">
                     <input type="file" id="url" name="url" class="form-control">
                 </div>
-                <button class="btn mb-1">添加新剧集</button>
+                <button class="btn btn-purple mb-1">添加新剧集</button>
             </form>
         </div>
     </div>

@@ -114,15 +114,3 @@ a {
 a:hover {
     text-decoration: none;
 }
-
-
-#back-button {
-    border-radius: 50%;
-    background-color: #6f42c1;
-    color: #ffffff;
-}
-
-#back-button:hover {
-    background-color: #ffffff;
-    color: #6f42c1;
-}

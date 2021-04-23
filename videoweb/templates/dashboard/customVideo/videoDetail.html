@@ -46,7 +46,7 @@
         <div class="me-2" role="group">
             % if detail:
                 % for single in detail:
-                <a href="${reverse('custom_video_play', kwargs={'videoID': video.id, 'subID': single.id})}"><button type="button" class="btn">${single.name}</button></a>
+                <a href="${reverse('custom_video_play', kwargs={'videoID': video.id, 'subID': single.id})}"><button type="button" class="btn btn-purple-outline">${single.name}</button></a>
                 % endfor
             % endif
         </div>
@@ -58,7 +58,7 @@
 
 <!--------------------------------- 显示按钮去更细致的更改内容 ------------------------------->
 <div id="forth">
-    <a href="${reverse('custom_videosub', kwargs={'id': video.id})}"><button type="button" class="btn">编辑剧集</button></a>
+    <a href="${reverse('custom_videosub', kwargs={'id': video.id})}"><button type="button" class="btn btn-purple">编辑剧集</button></a>
 </div>
 
 

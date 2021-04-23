@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, reverse
+from django.http import JsonResponse
 from app.dashboardModels.video import Video
 from django.views.generic import View
 from app.libs.base_render import render_to_response
@@ -6,7 +7,7 @@ from app.dashboard.utils.permission import dashboardAuth
 from app.dashboardModels.video import VideoType, VideoSource, Nation, Video, VideoStar, IdentityType, CustomVideo
 from app.dashboard.utils.common import checkEnum, customVideoUpload, customVideoDelete
 from django.contrib.auth.models import User
-
+from celery.result import AsyncResult
 
 '''
     列出所有的视频简介内容
@@ -158,6 +159,10 @@ class CustomVideoSub(View):
         error = req.GET.get('error', '')
         data['error'] = error
 
+        # 获取异步消息队列的task_id
+        task_id = req.GET.get('task_id', '')
+        data['task_id'] = task_id
+
         exists = Video.objects.filter(pk=id).exists()
         if not exists:
             return Http404()
@@ -193,9 +198,10 @@ class AddCustomVideoSub(View):
         if exists:
             return redirect('{}?error={}'.format(reverse('custom_videosub', kwargs={'id': id}), '该剧集已经被添加，请勿重复添加'))
 
-        customVideoUpload(file, video, name)    # 负责上传内容至云端，并保存入数据库
+        task_id = customVideoUpload(file, video, name)    # 负责上传内容至云端，并保存入数据库
 
-        return redirect(reverse('custom_videosub', kwargs={'id': id}))
+        return redirect('{}?task_id={}'.format(reverse('custom_videosub', kwargs={'id': id}), task_id))
+
 
 '''
     预览与播放上传的视频
@@ -261,3 +267,11 @@ class UpdateCustomVideoSub(View):
         )
 
         return redirect(reverse('custom_videosub', kwargs={'id': id}))
+
+
+def checkStatus(req):
+    task_id = req.GET.get('task_id')
+    if task_id:
+        async_result = AsyncResult(task_id)
+        return JsonResponse({'status': async_result.ready()})
+    return JsonResponse({'status': False})

@@ -2,8 +2,7 @@ from django.urls import path
 from app.dashboard.views.base import Index
 from .views.auth import Login, Logout, AdminManage, UpdateAdminStatus, Register
 from .views.externalVideo import ExternalVideo, VideoDetail, EditVideo, VideoSubAndStarView, DeleteVideoSub, DeleteVideoStar, AddVideoStar, AddVideoSub, ChangeStatus, UpdateVideoSub
-from .views.customVideo import ListCustomVideo, CustomEditVideo, CustomVideoDetail, CustomVideoSub, AddCustomVideoSub, DeleteCustomVideoSub, UpdateCustomVideoSub, PlayCustomVideo
-
+from .views.customVideo import ListCustomVideo, CustomEditVideo, CustomVideoDetail, CustomVideoSub, AddCustomVideoSub, DeleteCustomVideoSub, UpdateCustomVideoSub, PlayCustomVideo, checkStatus
 
 
 urlpatterns = [
@@ -33,5 +32,7 @@ urlpatterns = [
     path('video/custom/addsub/<int:id>', AddCustomVideoSub.as_view(), name='custom_videosub_add'),
     path('video/custom/deletesub/<int:videoID>/<int:subID>', DeleteCustomVideoSub.as_view(), name="custom_videosub_delete"),
     path('video/custom/updatesub/<int:id>', UpdateCustomVideoSub.as_view(), name="custom_videosub_update"),
-    path('video/custom/play/<int:videoID>/<int:subID>', PlayCustomVideo.as_view(), name="custom_video_play")
+    path('video/custom/play/<int:videoID>/<int:subID>', PlayCustomVideo.as_view(), name="custom_video_play"),
+
+    path('check', checkStatus, name="checkStatus"),
 ]

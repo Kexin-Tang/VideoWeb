@@ -55,7 +55,7 @@
         <div class="me-2" role="group">
             % if detail:
                 % for single in detail:
-                <a href="${single.url}"><button type="button" class="btn">${single.number}</button></a>
+                <a href="${single.url}"><button type="button" class="btn btn-purple-outline">${single.number}</button></a>
                 % endfor
             % endif
         </div>
@@ -68,7 +68,7 @@
 <!--------------------------------- 显示按钮去更细致的更改内容 ------------------------------->
 <div id="forth">
     % if user:
-    <a href="${reverse('video_sub_star_view', kwargs={'id': video.id})}"><button type="button" class="btn">编辑演员和剧集</button></a>
+    <a href="${reverse('video_sub_star_view', kwargs={'id': video.id})}"><button type="button" class="btn btn-purple">编辑演员和剧集</button></a>
     % endif
 </div>
 
