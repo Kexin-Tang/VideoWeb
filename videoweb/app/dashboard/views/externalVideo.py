@@ -4,9 +4,9 @@
 from django.views.generic import View
 from django.shortcuts import redirect, render, reverse
 from app.libs.base_render import render_to_response
-from app.dashboard.utils.permission import dashboardAuth
-from app.dashboardModels.video import VideoType, VideoSource, Nation, Video, VideoStar, IdentityType
-from app.dashboardModels.video import VideoDetail as Detail
+from app.dashboard.utils.permission import dashboardAuth, checkLoginByCookies, checkLoginBySession
+from app.models.video import VideoType, VideoSource, Nation, Video, VideoStar, IdentityType
+from app.models.video import VideoDetail as Detail
 from app.dashboard.utils.common import checkEnum
 from django.http import Http404
 
@@ -16,7 +16,7 @@ from django.http import Http404
 class ExternalVideo(View):
     TEMPLATE = 'dashboard/externalVideo/listExternalVideo.html'
 
-    @dashboardAuth
+    @checkLoginBySession
     def get(self, req):
         data = {}
 
@@ -35,6 +35,7 @@ class ExternalVideo(View):
 
         return render_to_response(req, self.TEMPLATE, data=data)
 
+    @checkLoginBySession
     def post(self, req):
         # 获取信息
         videoName = req.POST.get('videoName')
@@ -74,7 +75,7 @@ class ExternalVideo(View):
 class VideoDetail(View):
     TEMPLATE = 'dashboard/externalVideo/videoDetail.html'
 
-    @dashboardAuth
+    @checkLoginBySession
     def get(self, req, id):
         data = {}
 
@@ -109,7 +110,7 @@ class VideoDetail(View):
 
         return render_to_response(req, self.TEMPLATE, data=data)
 
-    @dashboardAuth
+    @checkLoginBySession
     def post(self, req, id):
         return render_to_response(req, self.TEMPLATE)
 
@@ -119,7 +120,7 @@ class VideoDetail(View):
 class EditVideo(View):
     TEMPLATE = 'dashboard/externalVideo/editVideo.html'
 
-    @dashboardAuth
+    @checkLoginBySession
     def get(self, req, id):
         data = {}
         video = Video.objects.get(id=id)
@@ -129,7 +130,7 @@ class EditVideo(View):
 
         return render_to_response(req, self.TEMPLATE, data=data)
 
-
+    @checkLoginBySession
     def post(self, req, id):
         videoName = req.POST.get('videoName')
         image = req.POST.get('image')
@@ -161,6 +162,7 @@ class EditVideo(View):
 class VideoSubAndStarView(View):
     TEMPLATE = 'dashboard/externalVideo/videoSubStarView.html'
 
+    @checkLoginBySession
     def get(self, req, id):
         data = {}
         error = req.GET.get('error', '')
@@ -183,6 +185,7 @@ class VideoSubAndStarView(View):
     创建剧集
 '''
 class AddVideoSub(View):
+    @checkLoginBySession
     def post(self, req, id):
         url = req.POST.get('url', '')
         number = req.POST.get('number', '')
@@ -207,6 +210,7 @@ class AddVideoSub(View):
     删除剧集
 '''
 class DeleteVideoSub(View):
+    @checkLoginBySession
     def get(self, req, videoID, subID):
         exists = Video.objects.filter(pk=videoID).exists()
         if not exists:
@@ -224,6 +228,7 @@ class DeleteVideoSub(View):
     创建演员
 '''
 class AddVideoStar(View):
+    @checkLoginBySession
     def post(self, req, id):
         name = req.POST.get('name', '')
         identity = req.POST.get('identity', '')
@@ -248,6 +253,7 @@ class AddVideoStar(View):
     删除演员
 '''
 class DeleteVideoStar(View):
+    @checkLoginBySession
     def get(self, req, videoID, starID):
         exists = Video.objects.filter(pk=videoID).exists()
         if not exists:
@@ -265,6 +271,7 @@ class DeleteVideoStar(View):
     改变视频状态
 '''
 class ChangeStatus(View):
+    @checkLoginBySession
     def get(self, req, id):
         exists = Video.objects.filter(pk=id).exists()
         if not exists:
@@ -282,6 +289,7 @@ class ChangeStatus(View):
     修改剧集信息
 '''
 class UpdateVideoSub(View):
+    @checkLoginBySession
     def post(self, req, id):
         number = req.POST.get('number', '')
         url = req.POST.get('url', '')

@@ -8,55 +8,74 @@ from django.shortcuts import render, reverse, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.core.paginator import Paginator
-from app.dashboard.utils.permission import dashboardAuth
+from app.dashboard.utils.permission import dashboardAuth, checkLoginByCookies, checkLoginBySession
+from django.http import JsonResponse
+from app.const.const import COOKIES_NAME, SESSION_NAME
+import datetime
 
 class Login(View):
     TEMPLATE = 'dashboard/auth/login.html'
+
     def get(self, req):
-        if req.user.is_authenticated:
+        data = {}
+
+        # id = req.COOKIES.get(COOKIES_NAME)      # cookie版本
+        id = req.session.get(SESSION_NAME)      # session版本
+
+        if id:
             return redirect(reverse('dashboard_index'))
 
         to = req.GET.get('to', '')
-        return render_to_response(req, self.TEMPLATE, {'error': '', 'to': to})
+        return render_to_response(req, self.TEMPLATE, {'to': to})
+
+
 
     def post(self, req):
         username = req.POST.get('username')
         password = req.POST.get('password')
-        to = req.GET.get('to', '')          # 用于存储下一次跳转的位置
 
         # 查看是否存在用户
         exists = User.objects.filter(username=username).exists()
         if not exists:
-            return render_to_response(req, self.TEMPLATE, {'error': "未找到该用户"})
+            return JsonResponse({'status': -1, 'error': '该用户不存在'})
 
         # 查看用户账号密码是否匹配
         user = authenticate(username=username, password=password)
         if not user:
-            return render_to_response(req, self.TEMPLATE, {'error': "登录失败"})
+            return JsonResponse({'status': -1, 'error': "登录失败"})
 
         user = User.objects.get(username=username)
         if user.is_staff is False:
-            return render_to_response(req, self.TEMPLATE, {'error': "缺少权限，请联系管理员"})
+            return JsonResponse({'status': -1, 'error': "缺少权限，请联系管理员"})
 
-        login(req, user)
+        current_time = datetime.datetime.utcnow()                   # 获取当前时间
+        expire_time = current_time + datetime.timedelta(minutes=5)  # 推迟五分钟作为过期时间
 
-        # 如果有跳转，则跳转
-        if to:
-            return redirect(to)
+        # # 配置cookie
+        # response = JsonResponse({'status': 0, 'error': ''})
+        # response.set_cookie(COOKIES_NAME, str(user.id), expires=expire_time)
 
-        return redirect(reverse('dashboard_index'))
+        # 配置session
+        req.session[SESSION_NAME] = user.id
+        req.session["is_login"] = "true"
+        req.session.set_expiry(300)         # 300s后失效
+        response = JsonResponse({'status': 0, 'error': ''})
+
+        return response
 
 
 class Logout(View):
     def get(self, req):
-        logout(req)
-        return redirect(reverse('dashboard_login'))
+        response = redirect(reverse('dashboard_login'))
+        # response.delete_cookie(COOKIES_NAME)  # cookies版本
+        req.session.flush() # session版本
+        return response
 
 
 class AdminManage(View):
     TEMPLATE = 'dashboard/auth/admin.html'
 
-    @dashboardAuth
+    @checkLoginBySession
     def get(self, req):
         users = User.objects.all()
 

@@ -1,7 +1,7 @@
-<%inherit file="../base.html"/>
+<%inherit file="../../base.html"/>
 <%!
     from django.shortcuts import reverse
-    from app.dashboardModels.video import VideoType, VideoSource, Nation, IdentityType
+    from app.models.video import VideoType, VideoSource, Nation, IdentityType
 %>
 <%def name="title()">详细信息</%def>
 <%def name="css()"><link href="/static/dashboard/css/custom/detailVideo.css" rel="stylesheet"></%def>

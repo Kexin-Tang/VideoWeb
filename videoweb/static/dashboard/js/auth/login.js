@@ -1,41 +1,4 @@
-<!DOCTYPE html>
-<%! from django.shortcuts import reverse %>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>登录界面</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
-    <link href="/static/dashboard/css/base.css" rel="stylesheet">
-</head>
-
-<body  class="d-flex flex-column vh-100">
-<%include file="../../nav.html"/>
-
-<div class="container" style="display: flex; justify-content: center; align-items: center">
-<div class="col-4">
-<h1 style="margin-bottom: 2rem; margin-top: 2rem; margin-left: 0;">用户登录</h1>
-
-    <div class="mb-3">
-        <label for="username">用户名</label>
-        <input type="text" id="username" name="username">
-        <span id="username-error" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label for="password" >密码</label>
-        <input type="password" id="password" name="password">
-        <span id="password-error" class="text-danger"></span>
-    </div>
-    <button class="btn btn-purple mb-3" id="login-btn">登录</button>
-    <span id="login-status"></span>
-    ${csrf_token}
-
-</div>
-</div>
-<%include file="../../footer.html"/>
-<script src="/static/jquery-1.12.4.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
-<script>
-    $('#login-btn').click(function(){
+$('#login-btn').click(function(){
         let username = $('#username').val();
         let password = $('#password').val();
         let csrf_token = $('#csrf_token').val();
@@ -87,6 +50,3 @@
             }
         });
     });
-</script>
-</body>
-</html>

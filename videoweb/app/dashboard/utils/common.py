@@ -7,7 +7,7 @@ import cloudinary.uploader
 import cloudinary.api
 
 from app.tasks.task import myUpload, myDelete
-from app.dashboardModels.video import CustomVideo
+from app.models.video import CustomVideo
 
 '''
     用于检测枚举类型是否正确

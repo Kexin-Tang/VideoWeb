@@ -34,7 +34,7 @@ def render_to_response(req, template, data=None):
     result['request'] = req
     req.META["CSRF_COOKIE"] = get_token(req)
     result['csrf_token'] = ('<div style="display:none">'
-                            '<input type="hidden" '
+                            '<input type="hidden" id="csrf_token"'
                             'name="csrfmiddlewaretoken" '
                             'value="{0}"/>'
                             '</div>'.format(req.META["CSRF_COOKIE"]))

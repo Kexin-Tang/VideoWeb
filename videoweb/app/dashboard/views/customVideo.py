@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect, reverse
 from django.http import JsonResponse
-from app.dashboardModels.video import Video
+from app.models.video import Video
 from django.views.generic import View
 from app.libs.base_render import render_to_response
-from app.dashboard.utils.permission import dashboardAuth
-from app.dashboardModels.video import VideoType, VideoSource, Nation, Video, VideoStar, IdentityType, CustomVideo
+from app.dashboard.utils.permission import dashboardAuth, checkLoginBySession, checkLoginByCookies
+from app.models.video import VideoType, VideoSource, Nation, Video, VideoStar, IdentityType, CustomVideo
 from app.dashboard.utils.common import checkEnum, customVideoUpload, customVideoDelete
 from django.contrib.auth.models import User
 from celery.result import AsyncResult
@@ -15,7 +15,7 @@ from celery.result import AsyncResult
 class ListCustomVideo(View):
     TEMPLATE = 'dashboard/customVideo/listCustomVideo.html'
 
-    @dashboardAuth
+    @checkLoginBySession
     def get(self, req):
         data = {}
 
@@ -36,7 +36,7 @@ class ListCustomVideo(View):
 
         return render_to_response(req, self.TEMPLATE, data=data)
 
-    @dashboardAuth
+    @checkLoginBySession
     def post(self, req):
         # 获取信息
         videoName = req.POST.get('videoName')
@@ -77,7 +77,7 @@ class ListCustomVideo(View):
 class CustomEditVideo(View):
     TEMPLATE = 'dashboard/customVideo/editVideo.html'
 
-    @dashboardAuth
+    @checkLoginBySession
     def get(self, req, id):
         data = {}
         video = Video.objects.get(id=id)
@@ -87,7 +87,7 @@ class CustomEditVideo(View):
 
         return render_to_response(req, self.TEMPLATE, data=data)
 
-
+    @checkLoginBySession
     def post(self, req, id):
         videoName = req.POST.get('videoName')
         image = req.POST.get('image')
@@ -119,7 +119,7 @@ class CustomEditVideo(View):
 class CustomVideoDetail(View):
     TEMPLATE = 'dashboard/customVideo/videoDetail.html'
 
-    @dashboardAuth
+    @checkLoginBySession
     def get(self, req, id):
         data = {}
 
@@ -145,7 +145,7 @@ class CustomVideoDetail(View):
 
         return render_to_response(req, self.TEMPLATE, data=data)
 
-    @dashboardAuth
+    @checkLoginBySession
     def post(self, req, id):
         return render_to_response(req, self.TEMPLATE)
 
@@ -153,7 +153,7 @@ class CustomVideoDetail(View):
 class CustomVideoSub(View):
     TEMPLATE = 'dashboard/customVideo/videoSub.html'
 
-    @dashboardAuth
+    @checkLoginBySession
     def get(self, req, id):
         data = {}
         error = req.GET.get('error', '')
@@ -180,6 +180,7 @@ class CustomVideoSub(View):
     创建剧集
 '''
 class AddCustomVideoSub(View):
+    @checkLoginBySession
     def post(self, req, id):
         file = req.FILES.get('url', '')
         name = req.POST.get('name', '')
@@ -208,6 +209,8 @@ class AddCustomVideoSub(View):
 '''
 class PlayCustomVideo(View):
     TEMPLATE = 'dashboard/customVideo/playVideo.html'
+
+    @checkLoginBySession
     def get(self, req, videoID, subID):
         data = {}
 
@@ -227,6 +230,7 @@ class PlayCustomVideo(View):
     删除剧集
 '''
 class DeleteCustomVideoSub(View):
+    @checkLoginBySession
     def get(self, req, videoID, subID):
         exists = Video.objects.filter(pk=videoID).exists()
         if not exists:
@@ -246,6 +250,7 @@ class DeleteCustomVideoSub(View):
     更新剧集
 '''
 class UpdateCustomVideoSub(View):
+    @checkLoginBySession
     def post(self, req, id):
         name = req.POST.get('name', '')
         subID = req.POST.get('id', '')

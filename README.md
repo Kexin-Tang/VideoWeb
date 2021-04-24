@@ -1,11 +1,15 @@
 # VideoWeb
 A Youtube-like video web system
 
+## 使用的功能
+
+* Celery 异步消息队列
+* AJAX 动态刷新
+* Cookies和Session
+
 ## TODO
 
-[] 管理员删除用户/视频
-[] 自制视频
-[] 用户的状态和权限作用
-[] deploy
-[] Responsive
-[] 视频分类，标签等
+* Responsive Design
+* 记住我/自动登录
+* 通过用户名/手机号/邮箱都能登录
+* 部署

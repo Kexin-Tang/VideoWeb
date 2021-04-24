@@ -1,3 +1,3 @@
-from .dashboardModels.video import Video, VideoStar, VideoDetail, CustomVideo
-from .dashboardModels.auth import ClientUser
+from .models.video import Video, VideoStar, VideoDetail, CustomVideo
+from .models.auth import ClientUser
 

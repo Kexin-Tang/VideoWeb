@@ -6,7 +6,7 @@ import os
 import cloudinary.uploader
 import cloudinary.api
 
-from app.dashboardModels.video import CustomVideo
+from app.models.video import CustomVideo
 
 @app.task
 def myUpload(filePath, public_id, newVideoID):
