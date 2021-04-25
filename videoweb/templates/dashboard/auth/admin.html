@@ -1,4 +1,4 @@
-<%inherit file="../base.html"/>
+<%inherit file="../../base.html"/>
 <%! from django.shortcuts import reverse %>
 <%def name="title()">管理员界面</%def>
 <%def name="content()">
@@ -33,9 +33,9 @@
                     % if isAdmin:
                         % if not user.is_superuser:
                             % if user.is_staff:
-                            <a href="${reverse('admin_update_status')}?status=on&id=${user.id}"><button class="btn">取消权限</button></a>
+                            <a href="${reverse('admin_update_status')}?status=on&id=${user.id}"><button class="btn btn-purple-outline">取消权限</button></a>
                             % else:
-                            <a href="${reverse('admin_update_status')}?status=off&id=${user.id}"><button class="btn">授予权限</button></a>
+                            <a href="${reverse('admin_update_status')}?status=off&id=${user.id}"><button class="btn btn-purple-outline">授予权限</button></a>
                             % endif
                         % endif
                     % endif

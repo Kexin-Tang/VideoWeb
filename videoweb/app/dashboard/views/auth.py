@@ -63,7 +63,7 @@ class Login(View):
 
         # 配置session
         req.session[SESSION_NAME] = user.id
-        req.session['user_name'] = user.username
+        req.session["username"] = user.username
         req.session["is_login"] = "true"
         req.session.set_expiry(300)         # 300s后失效
         response = JsonResponse({'status': 0, 'error': ''})
@@ -86,6 +86,7 @@ class Logout(View):
         # response.delete_cookie(COOKIES_NAME)  # cookies版本
         req.session.flush() # session版本
         return response
+
 
 
 """
@@ -119,6 +120,8 @@ class AdminManage(View):
         data = {'users': current_users, 'total': int(total_pages), 'page': int(page), 'isAdmin': isAdmin}
 
         return render_to_response(req, self.TEMPLATE, data=data)
+
+
 
 
 """

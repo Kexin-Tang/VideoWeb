@@ -20,7 +20,7 @@
     ${table()}
 
     <div class="col-6 offset-3" style="text-align: center">
-    % if user:
+    % if user == 'admin':
         <button class="btn btn-purple mb-1" id="create-form-btn" data-bs-toggle="modal" data-bs-target="#createForm">创建</button>
     ${modal()}
     % endif

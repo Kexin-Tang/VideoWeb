@@ -8,6 +8,11 @@ from app.models.video import VideoType, VideoSource, Nation, Video, VideoStar, I
 from app.dashboard.utils.common import checkEnum, customVideoUpload, customVideoDelete
 from django.contrib.auth.models import User
 from celery.result import AsyncResult
+from app.const.const import SESSION_NAME
+
+
+
+
 
 '''
     列出所有的视频简介内容
@@ -19,22 +24,18 @@ class ListCustomVideo(View):
     def get(self, req):
         data = {}
 
-        # 获取用户信息
-        user = req.user
-        data['user'] = user.username
-
         # 获取错误信息，设置error
         error = req.GET.get('error', '')
         data['error'] = error
 
         # 获取"用户自定义"视频的QueryList
-        if user.is_superuser:
+        if (req.session.get('username') == 'admin'):
             videos = Video.objects.filter(source=VideoSource.custom.value)
         else:
             videos = Video.objects.filter(source=VideoSource.custom.value, user=user)
         data['videos'] = videos
-
         return render_to_response(req, self.TEMPLATE, data=data)
+
 
     @checkLoginBySession
     def post(self, req):
@@ -45,7 +46,11 @@ class ListCustomVideo(View):
         nation = req.POST.get('nation')
         desc = req.POST.get('desc')
 
-        user = req.user
+        userID = req.session.get(SESSION_NAME)
+        exists = User.objects.filter(pk=userID).exists()
+        if not exists:
+            return redirect('{}?error={}'.format(reverse('list_custom_video'), '用户不存在'))
+        user = User.objects.filter(pk=userID)[0]
 
         # 如果有该填写的区域为空
         if not all([videoName, image, videoType, nation, desc]):
@@ -71,6 +76,7 @@ class ListCustomVideo(View):
 
 
 
+
 '''
     编辑某个特定的视频
 '''
@@ -84,7 +90,6 @@ class CustomEditVideo(View):
         error = req.GET.get('error', '')
         data['video'] = video
         data['error'] = error
-
         return render_to_response(req, self.TEMPLATE, data=data)
 
     @checkLoginBySession
@@ -108,8 +113,8 @@ class CustomEditVideo(View):
             nation=nation,
             desc=desc
         )
-
         return redirect(reverse('list_custom_video'))
+
 
 
 
@@ -130,7 +135,7 @@ class CustomVideoDetail(View):
         video = Video.objects.get(id=id)
 
         # 如果别的用户通过url强行访问别人的视频
-        if not req.user.is_superuser and str(req.user.username) != str(video.user):
+        if (req.session.get('username')!='admin') and str(req.session.get('username')) != str(video.user):
             return redirect('{}?error={}'.format(reverse('list_custom_video'), '您没有该视频内容或权限'))
 
         data['video'] = video
@@ -142,12 +147,14 @@ class CustomVideoDetail(View):
         else:
             detail = CustomVideo.objects.filter(video=video)
             data['detail'] = detail
-
         return render_to_response(req, self.TEMPLATE, data=data)
 
     @checkLoginBySession
     def post(self, req, id):
         return render_to_response(req, self.TEMPLATE)
+
+
+
 
 
 class CustomVideoSub(View):
@@ -202,6 +209,7 @@ class AddCustomVideoSub(View):
         task_id = customVideoUpload(file, video, name)    # 负责上传内容至云端，并保存入数据库
 
         return redirect('{}?task_id={}'.format(reverse('custom_videosub', kwargs={'id': id}), task_id))
+
 
 
 '''

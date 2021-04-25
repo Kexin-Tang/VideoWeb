@@ -9,6 +9,11 @@ from app.models.video import VideoType, VideoSource, Nation, Video, VideoStar, I
 from app.models.video import VideoDetail as Detail
 from app.dashboard.utils.common import checkEnum
 from django.http import Http404
+from app.const.const import SESSION_NAME
+from django.contrib.auth.models import User
+
+
+
 
 '''
     视频主页，显示视频列表
@@ -21,9 +26,7 @@ class ExternalVideo(View):
         data = {}
 
         # 获取用户信息，如果是管理员，则设置user
-        user = req.user
-        if user.is_superuser:
-            data['user'] = 'admin'
+        data['user'] = req.session.get('username', '')
 
         # 获取错误信息，设置error
         error = req.GET.get('error', '')
@@ -45,7 +48,12 @@ class ExternalVideo(View):
         nation = req.POST.get('nation')
         desc = req.POST.get('desc')
 
-        user = req.user
+        userID = req.session.get(SESSION_NAME)
+        exists = User.objects.filter(pk=userID).exists()
+        if not exists:
+            return redirect('{}?error={}'.format(reverse('external_video'), '用户不存在'))
+
+        user = User.objects.filter(pk=userID)[0]
 
         # 如果有该填写的区域为空
         if not all([videoName, image, videoType, videoSource, nation, desc]):
@@ -69,6 +77,11 @@ class ExternalVideo(View):
 
         return redirect(reverse('external_video'))
 
+
+
+
+
+
 '''
     显示某个视频的详细信息，如图片、简介、剧集等
 '''
@@ -79,17 +92,11 @@ class VideoDetail(View):
     def get(self, req, id):
         data = {}
 
-        # 如果用户为管理员，则设置user
-        user = req.user
-        if user.is_superuser:
-            data['user'] = 'admin'
-
         # 获取视频
         exists = Video.objects.filter(id=id).exists()
         if not exists:
             return redirect('{}?error={}'.format(reverse('external_video'), '没有该视频'))
         video = Video.objects.get(id=id)
-
         data['video'] = video
 
         # 查看视频相关的细节
@@ -107,12 +114,16 @@ class VideoDetail(View):
         else:
             stars = VideoStar.objects.filter(video=video).order_by('identity')
             data['stars'] = stars
-
         return render_to_response(req, self.TEMPLATE, data=data)
 
     @checkLoginBySession
     def post(self, req, id):
         return render_to_response(req, self.TEMPLATE)
+
+
+
+
+
 
 '''
     编辑某个特定的视频
@@ -127,7 +138,6 @@ class EditVideo(View):
         error = req.GET.get('error', '')
         data['video'] = video
         data['error'] = error
-
         return render_to_response(req, self.TEMPLATE, data=data)
 
     @checkLoginBySession
@@ -153,8 +163,13 @@ class EditVideo(View):
             nation=nation,
             desc=desc
         )
-
         return redirect(reverse('external_video'))
+
+
+
+
+
+
 
 '''
     查看视频详细的分集、演员等
@@ -181,6 +196,12 @@ class VideoSubAndStarView(View):
 
         return render_to_response(req, self.TEMPLATE, data=data)
 
+
+
+
+
+
+
 '''
     创建剧集
 '''
@@ -206,6 +227,12 @@ class AddVideoSub(View):
         return redirect(reverse('video_sub_star_view', kwargs={'id': id}))
 
 
+
+
+
+
+
+
 '''
     删除剧集
 '''
@@ -222,6 +249,12 @@ class DeleteVideoSub(View):
 
         Detail.objects.filter(pk=subID).delete()
         return redirect(reverse('video_sub_star_view', kwargs={'id': videoID}))
+
+
+
+
+
+
 
 
 '''
@@ -249,6 +282,13 @@ class AddVideoStar(View):
         return redirect(reverse('video_sub_star_view', kwargs={'id': id}))
 
 
+
+
+
+
+
+
+
 '''
     删除演员
 '''
@@ -267,6 +307,12 @@ class DeleteVideoStar(View):
         return redirect(reverse('video_sub_star_view', kwargs={'id': videoID}))
 
 
+
+
+
+
+
+
 '''
     改变视频状态
 '''
@@ -283,6 +329,14 @@ class ChangeStatus(View):
         Video.objects.filter(pk=id).update(status=status)
 
         return redirect(reverse('external_video'))
+
+
+
+
+
+
+
+
 
 
 '''

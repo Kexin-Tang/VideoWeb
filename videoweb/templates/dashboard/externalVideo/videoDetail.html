@@ -67,7 +67,7 @@
 
 <!--------------------------------- 显示按钮去更细致的更改内容 ------------------------------->
 <div id="forth">
-    % if user:
+    % if request.session.get('username') == 'admin':
     <a href="${reverse('video_sub_star_view', kwargs={'id': video.id})}"><button type="button" class="btn btn-purple">编辑演员和剧集</button></a>
     % endif
 </div>
