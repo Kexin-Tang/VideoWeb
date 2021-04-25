@@ -15,21 +15,21 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                ${loginCheck(request.user)}
+                ${loginCheck(request.session.get('user_name', ''))}
             </ul>
         </div>
     </div>
 </nav>
 
-<%def name="loginCheck(user)">
-    % if user.is_anonymous:
+<%def name="loginCheck(username)">
+    % if not username:
         <a class="nav-link" href="${reverse('dashboard_login')}"> 登录 </a>
         <a class="nav-link" href="${reverse('dashboard_register')}"> 注册 </a>
     % else:
         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">${request.user}</a>
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">${username}</a>
             <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarDropdown">
-                % if request.user.is_superuser:
+                % if username == "admin":
                     <li><a class="dropdown-item" href="${reverse('admin_manage')}">管理用户</a></li>
                 % endif
                 <li><a class="dropdown-item" href="${reverse('dashboard_logout')}">注销</a></li>

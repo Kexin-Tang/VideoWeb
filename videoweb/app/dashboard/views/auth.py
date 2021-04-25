@@ -13,21 +13,27 @@ from django.http import JsonResponse
 from app.const.const import COOKIES_NAME, SESSION_NAME
 import datetime
 
+
+
+
+"""
+    ////////////////////////////////////////////////////////////////////////////////
+    登录界面
+    
+    @ get   ->  判断是否登录，如果登录了则跳转至主页；否则进行登录，并保存发出请求的路径至`to`
+    @ post  ->  进行用户名和密码的验证，如果无误则设置用户登录信息
+    ////////////////////////////////////////////////////////////////////////////////
+"""
 class Login(View):
     TEMPLATE = 'dashboard/auth/login.html'
 
     def get(self, req):
-        data = {}
-
         # id = req.COOKIES.get(COOKIES_NAME)      # cookie版本
         id = req.session.get(SESSION_NAME)      # session版本
-
         if id:
             return redirect(reverse('dashboard_index'))
-
         to = req.GET.get('to', '')
         return render_to_response(req, self.TEMPLATE, {'to': to})
-
 
 
     def post(self, req):
@@ -57,6 +63,7 @@ class Login(View):
 
         # 配置session
         req.session[SESSION_NAME] = user.id
+        req.session['user_name'] = user.username
         req.session["is_login"] = "true"
         req.session.set_expiry(300)         # 300s后失效
         response = JsonResponse({'status': 0, 'error': ''})
@@ -64,6 +71,15 @@ class Login(View):
         return response
 
 
+
+
+"""
+    ////////////////////////////////////////////////////////////////////////////////
+    注销
+    
+    @ get   ->  将用户登录信息抹去
+    ////////////////////////////////////////////////////////////////////////////////
+"""
 class Logout(View):
     def get(self, req):
         response = redirect(reverse('dashboard_login'))
@@ -72,6 +88,13 @@ class Logout(View):
         return response
 
 
+"""
+    ////////////////////////////////////////////////////////////////////////////////
+    管理员对用户权限等进行操作的视图
+
+    @ get   ->  显示用户信息
+    ////////////////////////////////////////////////////////////////////////////////
+"""
 class AdminManage(View):
     TEMPLATE = 'dashboard/auth/admin.html'
 
@@ -79,7 +102,8 @@ class AdminManage(View):
     def get(self, req):
         users = User.objects.all()
 
-        isAdmin = req.user.is_superuser # 当前登录的用户是管理员吗
+        # isAdmin = req.user.is_superuser # 当前登录的用户是管理员吗
+        isAdmin = (req.session.get('username')=='admin')
 
         page = req.GET.get('page', 1)   # 获取当前的页
         p = Paginator(users, 5)         # 定义num个数据/页
@@ -97,6 +121,13 @@ class AdminManage(View):
         return render_to_response(req, self.TEMPLATE, data=data)
 
 
+"""
+    ////////////////////////////////////////////////////////////////////////////////
+    更新用户状态
+
+    @ get   ->  更新用户状态
+    ////////////////////////////////////////////////////////////////////////////////
+"""
 class UpdateAdminStatus(View):
     AdminManage = 'dashboard/auth/admin.html'
     def get(self, req):
@@ -113,14 +144,24 @@ class UpdateAdminStatus(View):
         return redirect(reverse('admin_manage'))
 
 
+
+
+"""
+    ////////////////////////////////////////////////////////////////////////////////
+    用户注册逻辑
+
+    @ get   ->  注册界面
+    @ post  ->  检查注册的合法性，如果通过则完成信息更新与用户登录
+    ////////////////////////////////////////////////////////////////////////////////
+"""
 class Register(View):
     TEMPLATE = 'dashboard/auth/register.html'
     def get(self, req):
-        data = {}
-        error = req.GET.get('error', '')
-        data['error'] = error
+        id = req.session.get(SESSION_NAME)  # session版本
+        if id:
+            return redirect(reverse('dashboard_index'))
+        return render_to_response(req, self.TEMPLATE)
 
-        return render_to_response(req, self.TEMPLATE, data=data)
 
     def post(self, req):
         username = req.POST.get('username', '')
@@ -128,14 +169,14 @@ class Register(View):
         check = req.POST.get('check', '')
 
         if not all([username, password, check]):
-            return redirect('{}?error={}'.format(reverse('dashboard_register'), '请确保所有内容均被正确填写'))
+            return JsonResponse({'status': -1, 'error': '请填写相应内容'})
 
         exists = User.objects.filter(username=username).exists()
         if exists:
-            return redirect('{}?error={}'.format(reverse('dashboard_register'), '用户名已存在'))
+            return JsonResponse({'status': -1, 'error': '用户已存在'})
 
         if password and password!=check:
-            return redirect('{}?error={}'.format(reverse('dashboard_register'), '注册失败'))
+            return JsonResponse({'status': -1, 'error': '注册失败，请确保两次密码输入一致'})
 
         User.objects.create_user(
             username=username,
@@ -144,6 +185,12 @@ class Register(View):
         )
 
         user = User.objects.get(username=username)
-        login(req, user)
 
-        return redirect(reverse('dashboard_index'))
+        # 配置session
+        req.session[SESSION_NAME] = user.id
+        req.session['user_name'] = user.username
+        req.session["is_login"] = "true"
+        req.session.set_expiry(300)  # 300s后失效
+        response = JsonResponse({'status': 0, 'error': ''})
+
+        return response
